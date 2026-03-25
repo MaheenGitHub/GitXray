@@ -1,110 +1,243 @@
-# Dev DNA - GitHub Personality Analyzer
 
-A full-stack web application that analyzes a GitHub user's profile and determines their coding personality type.
+# 🧬 GitXray — Developer Intelligence Engine
 
-## 🚀 Quick Start
+> Analyze your GitHub. Discover how you actually code.
 
-### Prerequisites
-- Node.js 16+ installed
-- GitHub Personal Access Token
-- Git installed
+![GitHub stars](https://img.shields.io/github/stars/MaheenGitHub/GitXray?style=for-the-badge)
+![GitHub forks](https://img.shields.io/github/forks/MaheenGitHub/GitXray?style=for-the-badge)
+![GitHub issues](https://img.shields.io/github/issues/MaheenGitHub/GitXray?style=for-the-badge)
+![License](https://img.shields.io/github/license/MaheenGitHub/GitXray?style=for-the-badge)
+![Made with React](https://img.shields.io/badge/Frontend-React-blue?style=for-the-badge)
+![Backend Node](https://img.shields.io/badge/Backend-Node.js-green?style=for-the-badge)
 
-### Installation
+---
 
-1. **Clone the repository**
-```bash
-git clone <repository-url>
-cd DevDNA
+## 🧠 What is GitXray?
+
+**GitXray** is not just a GitHub analyzer.
+
+It’s a **Developer Behavior Intelligence System** that:
+
+- 🧬 Understands how you code  
+- 🔍 Detects your real development patterns  
+- ⚡ Reveals strengths, blind spots & habits  
+- 😈 Even roasts you (accurately)
+
+---
+
+## 🔥 Why GitXray is Different
+
+Most tools:
 ```
 
-2. **Backend Setup**
-```bash
-cd backend
-npm install
-cp .env.example .env
-# Add your GitHub token to .env file
-npm run dev
+GitHub → Stats → Done
+
 ```
 
-3. **Frontend Setup**
-```bash
-cd frontend
-npm install
-npm run dev
+**GitXray:**
 ```
 
-4. **Access the application**
-- Frontend: http://localhost:5173
-- Backend API: http://localhost:5000
+GitHub → Behavior → Personality → Truth → Growth
 
-## 📋 Project Overview
+```
 
-Dev DNA analyzes GitHub profiles to determine coding personality types based on:
-- Repository patterns and languages
-- Commit frequency and timing
-- Code collaboration style
-- Project diversity
+👉 It tells you things you didn’t even realize about yourself.
 
-### Personality Types
+---
+
+## ✨ Core Features
+
+### 🧠 Behavioral Analysis Engine
+- Personality detection (Builder, Explorer, Debugger, etc.)
+- Confidence scoring system
+- Multi-dimensional trait breakdown
+
+#### Personality Types
 - **Builder** - Consistent, structured developers
 - **Explorer** - Experimental, multi-language developers  
 - **Debugger** - Problem-solving focused developers
 - **Collaborator** - Team-oriented, community builders
 - **Innovator** - Creative, cutting-edge developers
 
-## 🏗️ Architecture
+---
 
-### Frontend (React + Vite + Tailwind)
-- Component-based architecture
-- Responsive design
-- Real-time data visualization
-- Modern UI/UX patterns
+### 💣 Truth Insights (Signature Feature)
+Real, sharp observations like:
 
-### Backend (Node.js + Express)
-- RESTful API design
-- GitHub API integration
-- Personality analysis engine
-- Rate limiting and security
+> “You start more projects than you finish.”
 
-## 📚 Documentation
+> “You prefer building alone over collaborating.”
 
-- [Project Structure](./project-structure.md)
-- [Development Plan](./development-plan.md)
-- [Dependencies](./dependencies.md)
-- [API Documentation](./docs/API.md)
-- [Deployment Guide](./docs/DEPLOYMENT.md)
+---
 
-## 🛠️ Development
+### 😈 Roast Mode
+Savage but data-driven:
 
-### Environment Variables
+- Overachiever roast  
+- Lone wolf roast  
+- One-hit wonder roast  
+- Underappreciated dev roast  
 
-**Backend (.env)**
-```env
+👉 Highly shareable.
+
+---
+
+### 🎭 Multi-Mode Experience
+Switch between:
+
+- 🛡️ Professional Mode  
+- 🎉 Fun Mode  
+- 😈 Roast Mode  
+
+---
+
+### 📊 Visual Intelligence
+- Personality score charts  
+- Language distribution  
+- Repo statistics  
+- Performance metrics  
+
+---
+
+### 🧬 Developer Identity Card
+Download & share:
+
+```
+
+🧬 Dev DNA Report
+Type: Builder-Explorer
+Consistency: 78%
+Risk: Over-starter
+
+```
+
+---
+
+### 🕰️ Developer Timeline
+Track evolution:
+
+```
+
+2023 → Explorer
+2024 → Builder
+2025 → Architect
+
+````
+
+---
+
+### 🎯 Career Suggestions Engine
+Based on your behavior:
+
+- Software Architect  
+- Backend Engineer  
+- DevOps Engineer  
+
+---
+
+## 🖥️ Tech Stack
+
+### Frontend
+- React (Vite)
+- Tailwind CSS
+- Framer Motion
+- Axios
+
+### Backend
+- Node.js
+- Express.js
+- GitHub REST API
+
+---
+
+## ⚙️ Getting Started
+
+### Prerequisites
+- Node.js 16+ installed
+- GitHub Personal Access Token
+- Git installed
+
+
+### 1. Clone the repo
+
+```bash
+git clone https://github.com/MaheenGitHub/GitXray.git
+cd GitXray
+````
+
+---
+
+### 2. Setup Backend
+
+```bash
+cd backend
+npm install
+cp .env.example .env
+```
+
+Add your GitHub token:
+
+```
+GITHUB_API_TOKEN=your_token_here
+```
+
+Run:
+
+```bash
+npm run dev
+```
+
+---
+
+### 3. Setup Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+---
+
+### 4. Open App
+
+```
+http://localhost:5173
+```
+
+---
+
+## 🔐 Environment Variables
+
+### Backend
+
+```
 PORT=5000
-GITHUB_API_TOKEN=your_github_token
+GITHUB_API_TOKEN=your_token_here
 FRONTEND_URL=http://localhost:5173
 ```
 
-**Frontend (.env)**
-```env
+### Frontend
+
+```
 VITE_API_BASE_URL=http://localhost:5000/api
 ```
 
-### Scripts
+---
 
-**Frontend**
-```bash
-npm run dev      # Start development server
-npm run build    # Build for production
-npm run preview  # Preview production build
+## 📡 API Endpoints
+
+```
+GET /api/analyze/:username
+GET /api/behavioral/:username
+GET /api/roast/:username
+GET /api/user/:username
+GET /api/repositories/:username
+GET /api/health
 ```
 
-**Backend**
-```bash
-npm run dev      # Start development server with nodemon
-npm start        # Start production server
-npm test         # Run tests
-```
+---
+
 
 ## 🚀 Deployment
 
@@ -118,7 +251,26 @@ npm test         # Run tests
 2. Set environment variables including GitHub token
 3. Deploy and configure custom domain
 
+---
+
+## 🌍 Open Source
+
+We welcome contributions!
+
+### You can:
+
+* Add new personality types
+* Improve scoring logic
+* Add visualizations
+* Improve UI/UX
+
+---
+
 ## 🤝 Contributing
+
+```bash
+fork → clone → branch → commit → PR
+```
 
 1. Fork the repository
 2. Create feature branch (`git checkout -b feature/amazing-feature`)
@@ -126,9 +278,20 @@ npm test         # Run tests
 4. Push to branch (`git push origin feature/amazing-feature`)
 5. Open Pull Request
 
-## 📄 License
+See `CONTRIBUTING.md` for details.
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+---
+
+
+## 📚 Documentation
+
+- [Project Structure](./project-structure.md)
+- [Development Plan](./development-plan.md)
+- [Dependencies](./dependencies.md)
+- [API Documentation](./docs/API.md)
+- [Deployment Guide](./docs/DEPLOYMENT.md)
+
+---
 
 ## 🔗 Links
 
@@ -139,4 +302,47 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ---
 
-Built with ❤️ by the Dev DNA team
+
+## 🏆 What This Project Shows
+
+* System design thinking
+* Data → Insight transformation
+* Developer-focused product design
+* Real-world API integration
+* UX + psychology understanding
+
+---
+
+## 💣 Final Thought
+
+> This project doesn’t just analyze code.
+> It analyzes the **person behind the code.**
+
+---
+
+## ⭐ Support
+
+If you found this interesting:
+
+👉 Star the repo
+👉 Share with developers
+👉 Try it on your GitHub
+
+---
+
+## 📄 License
+
+MIT License
+
+---
+
+## 👩‍💻 Author
+
+**Maheen Fatima**
+[@MaheenGitHub](https://github.com/MaheenGitHub)
+
+---
+
+✨ Built with logic, curiosity, and a little bit of chaos.
+
+```
