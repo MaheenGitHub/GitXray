@@ -95,7 +95,7 @@ const PersonalityCard = ({ personality }) => {
                 {confidence} Confidence
               </span>
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Personality Traits */}

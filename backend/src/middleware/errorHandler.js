@@ -166,15 +166,20 @@ const globalErrorHandler = (err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
   err.errorCode = err.errorCode || 'INTERNAL_ERROR';
 
-  // Log the error
-  logger.error('Global Error Handler:', {
-    message: err.message,
-    stack: err.stack,
-    url: req.originalUrl,
-    method: req.method,
-    ip: req.ip,
-    userAgent: req.get('User-Agent')
-  });
+  // Log the error (with fallback if logger is not available)
+  try {
+    logger.error('Global Error Handler:', {
+      message: err.message,
+      stack: err.stack,
+      url: req.originalUrl,
+      method: req.method,
+      ip: req.ip,
+      userAgent: req.get('User-Agent')
+    });
+  } catch (logError) {
+    console.error('Logger error:', logError);
+    console.error('Original error:', err);
+  }
 
   // Handle specific error types
   let error = { ...err };

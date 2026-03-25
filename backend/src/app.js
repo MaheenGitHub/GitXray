@@ -13,7 +13,7 @@ require('dotenv').config();
 const logger = require('./utils/logger');
 const errorHandler = require('./middleware/errorHandler');
 const githubRoutes = require('./routes/github');
-const personalityRoutes = require('./routes/personality');
+// const personalityRoutes = require('./routes/personality');
 
 // Create Express app
 const app = express();
@@ -87,7 +87,11 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Request logging middleware
 app.use((req, res, next) => {
-  logger.info(`${req.method} ${req.path} - ${req.ip}`);
+  try {
+    logger.info(`${req.method} ${req.path} - ${req.ip}`);
+  } catch (error) {
+    console.error('Request logging error:', error);
+  }
   next();
 });
 
@@ -104,7 +108,7 @@ app.get('/health', (req, res) => {
 
 // API routes
 app.use('/api', githubRoutes);
-app.use('/api/personality', personalityRoutes);
+// app.use('/api/personality', personalityRoutes);
 
 // 404 handler for undefined routes
 app.use('*', (req, res) => {
@@ -117,6 +121,5 @@ app.use('*', (req, res) => {
 });
 
 // Global error handler (must be last middleware)
-app.use(errorHandler);
-
+app.use(errorHandler.globalErrorHandler);
 module.exports = app;
