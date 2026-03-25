@@ -536,11 +536,6 @@ describe('MyComponent', () => {
 - **Feature requests**: Open an issue
 - **Security issues**: Email maintainers privately
 
-### 📧 Contact
-
-- **Email**: dev-dna@example.com
-- **Twitter**: @DevDNAApp
-- **Discord**: [Join our community](https://discord.gg/devdna)
 
 ---
 
@@ -550,9 +545,7 @@ By contributing, you agree that your contributions will be licensed under the MI
 
 ---
 
-## 🙏 Thank You
-
-Thank you for contributing to Dev DNA! Your contributions help make this project better for everyone. We appreciate your time and effort! 🎉
+## Thank You
 
 ---
 
