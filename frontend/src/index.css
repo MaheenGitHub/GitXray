@@ -1,0 +1,123 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply bg-gray-950 text-gray-100;
+  }
+}
+
+@layer components {
+  .glass-morphism {
+    @apply bg-gray-900/50 backdrop-blur-md border border-gray-800;
+  }
+  
+  .gradient-border {
+    @apply relative bg-gray-950;
+  }
+  
+  .gradient-border::before {
+    content: '';
+    @apply absolute inset-0 rounded-lg bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 opacity-50 blur-sm;
+    z-index: -1;
+  }
+  
+  .personality-gradient-builder {
+    @apply bg-gradient-to-br from-blue-600 to-blue-800;
+  }
+  
+  .personality-gradient-explorer {
+    @apply bg-gradient-to-br from-green-600 to-green-800;
+  }
+  
+  .personality-gradient-debugger {
+    @apply bg-gradient-to-br from-amber-600 to-amber-800;
+  }
+  
+  .personality-gradient-perfectionist {
+    @apply bg-gradient-to-br from-purple-600 to-purple-800;
+  }
+  
+  .personality-gradient-hustler {
+    @apply bg-gradient-to-br from-red-600 to-red-800;
+  }
+}
+
+@layer utilities {
+  .text-shadow {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+  
+  .glow {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+  }
+  
+  .glow-green {
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+  }
+  
+  .glow-amber {
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
+  }
+  
+  .glow-purple {
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+  }
+  
+  .glow-red {
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-900;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-700 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-600;
+}
+
+/* Loading animation */
+.loading-dots::after {
+  content: '';
+  animation: loading-dots 1.5s infinite;
+}
+
+@keyframes loading-dots {
+  0%, 20% { content: ''; }
+  40% { content: '.'; }
+  60% { content: '..'; }
+  80%, 100% { content: '...'; }
+}
+
+/* Pulse animation for buttons */
+.pulse-on-hover:hover {
+  animation: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Chart container responsive */
+.chart-container {
+  position: relative;
+  height: 300px;
+  width: 100%;
+}
+
+@media (max-width: 640px) {
+  .chart-container {
+    height: 250px;
+  }
+}
