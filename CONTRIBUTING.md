@@ -1,4 +1,4 @@
-# 🤝 Contributing to Dev DNA
+# 🤝 Contributing to GitXray
 
 Thank you for your interest in contributing to Dev DNA! 🎉 We're excited to have you on board. This guide will help you get started with contributing to our open-source project.
 
