@@ -215,163 +215,133 @@ const ResultsPageV2 = () => {
     );
   }
 
-  const { analysis, roast, stats } = data;
-  const insights = analysis.behavioral_insights;
-  const dominantPersonality = analysis.personality?.dominant_personality;
-  const confidence = dominantPersonality?.score || 0;
+  const { analysis, stats } = data;
+  const insights = analysis?.behavioral_insights || {};
 
-  const modeData = {
+  const modes = {
     professional: {
+      color: 'blue',
       insight: insights.coreInsight,
       points: insights.strengths,
       title: "Professional Analysis",
-      color: "blue"
     },
     fun: {
+      color: 'purple',
       insight: insights.truthBombs[0] || insights.coreInsight,
       points: insights.truthBombs,
       title: "Fun Facts",
-      color: "purple"
     },
     roast: {
-      insight: roast.roasts[0] || "You're too perfect to roast!",
-      points: roast.roasts,
-      title: "Roast Mode 😈",
-      color: "red"
+      color: 'red',
+      insight: insights.roasts[0] || "You're too perfect to roast!",
+      points: insights.roasts,
+      title: "Savage Analysis",
     }
   };
 
-  const currentMode = modeData[mode];
+  const currentMode = modes[mode];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 text-white overflow-hidden">
-      
-      {/* HERO SECTION */}
-      <motion.section 
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="relative pt-20 pb-12 px-4"
-      >
-        <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col md:flex-row items-center gap-8 mb-12">
-            
-            {/* Avatar */}
+      {/* HERO SECTION - Full Width */}
+      <section className="relative pt-20 pb-12 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col lg:flex-row items-center gap-8">
+            {/* Profile */}
             <motion.div
-              initial={{ scale: 0.5, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.2, duration: 0.6 }}
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
               className="relative"
             >
               <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-white/20 shadow-2xl">
                 <img 
                   src={stats.avatar_url} 
-                  alt={stats.name}
-                  className="w-full h-full object-cover"
+                  alt={stats.name} 
+                  className="w-full h-full object-cover" 
                 />
               </div>
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.8, duration: 0.4 }}
-                className="absolute -bottom-2 -right-2 w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center"
-              >
+              <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
                 <Sparkles className="w-4 h-4 text-white" />
-              </motion.div>
+              </div>
             </motion.div>
-
+            
             {/* User Info */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.4, duration: 0.6 }}
-              className="flex-1 text-center md:text-left"
+            <motion.div 
+              className="flex-1 text-center lg:text-left"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
             >
               <h1 className="text-4xl md:text-5xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-                {stats.name || stats.username}
+                {stats.name}
               </h1>
               <p className="text-xl text-gray-300 mb-4">@{stats.username}</p>
               
-              {/* Personality Type */}
               <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6, duration: 0.4 }}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.4, delay: 0.2 }}
                 className="inline-block"
               >
-                <div className="px-4 py-2 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full border border-purple-400/30">
-                  <span className="text-lg font-semibold text-purple-300">
-                    {dominantPersonality?.name || 'The Architect'}
-                  </span>
+                <div className="px-4 py-2 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full border border-purple-400/30 backdrop-blur-sm">
+                  <div className="flex items-center gap-2">
+                    <Shield className="w-5 h-5 text-purple-400" />
+                    <span className="font-semibold">{insights.identityStatement}</span>
+                  </div>
                 </div>
-                <p className="text-sm text-gray-400 mt-2 italic">
-                  "{dominantPersonality?.description || 'Builds systems, not just code.'}"
-                </p>
               </motion.div>
             </motion.div>
           </div>
-
-          {/* Confidence Bar */}
-          <motion.div
-            initial={{ width: 0 }}
-            animate={{ width: "100%" }}
-            transition={{ delay: 0.8, duration: 1, ease: "easeOut" }}
-            className="h-2 bg-gray-700 rounded-full overflow-hidden mb-8"
-          >
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: `${confidence}%` }}
-              transition={{ delay: 1, duration: 1.2, ease: "easeOut" }}
-              className={`h-full bg-gradient-to-r from-${currentMode.color}-500 to-purple-500`}
-            />
-          </motion.div>
         </div>
-      </motion.section>
+      </section>
 
-      {/* MODE TOGGLE */}
+      {/* TABS - Above Core Insight */}
       <motion.section
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6, duration: 0.6 }}
         className="px-4 mb-12"
       >
         <div className="max-w-4xl mx-auto">
-          <div className="flex justify-center gap-2 p-1 bg-gray-800/50 rounded-full backdrop-blur-sm">
-            {Object.keys(modeData).map((modeKey) => (
-              <button
-                key={modeKey}
-                onClick={() => setMode(modeKey)}
-                className={`px-6 py-3 rounded-full font-medium transition-all duration-300 ${
-                  mode === modeKey
-                    ? `bg-${modeData[modeKey].color}-500 text-white shadow-lg`
-                    : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
-                }`}
-              >
-                {modeKey === 'professional' && (
-                  <span className="flex items-center gap-2">
-                    <Shield className="w-4 h-4" />
-                    Professional
-                  </span>
-                )}
-                {modeKey === 'fun' && (
-                  <span className="flex items-center gap-2">
-                    <Sparkles className="w-4 h-4" />
-                    Fun
-                  </span>
-                )}
-                {modeKey === 'roast' && (
-                  <span className="flex items-center gap-2">
-                    <Flame className="w-4 h-4" />
-                    Roast 😈
-                  </span>
-                )}
-              </button>
-            ))}
+          <div className="flex justify-center">
+            <div className="bg-gray-800/50 backdrop-blur-sm rounded-full p-1 border border-gray-700">
+              {Object.keys(modes).map((modeKey) => (
+                <button
+                  key={modeKey}
+                  onClick={() => setMode(modeKey)}
+                  className={`px-6 py-3 rounded-full font-medium transition-all duration-300 ${
+                    mode === modeKey
+                      ? `bg-${modes[modeKey].color}-500 text-white shadow-lg shadow-${modes[modeKey].color}-500/25`
+                      : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
+                  }`}
+                >
+                  {modeKey === 'professional' && (
+                    <span className="flex items-center gap-2">
+                      <Shield className="w-4 h-4" />
+                      Professional
+                    </span>
+                  )}
+                  {modeKey === 'fun' && (
+                    <span className="flex items-center gap-2">
+                      <Sparkles className="w-4 h-4" />
+                      Fun
+                    </span>
+                  )}
+                  {modeKey === 'roast' && (
+                    <span className="flex items-center gap-2">
+                      <Flame className="w-4 h-4" />
+                      Roast 😈
+                    </span>
+                  )}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </motion.section>
 
-      {/* CORE INSIGHT SECTION */}
+      {/* CORE INSIGHT SECTION - Full Width Centered */}
       <motion.section
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -379,7 +349,7 @@ const ResultsPageV2 = () => {
         className="px-4 mb-12"
       >
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-8">
+          <div className="text-center">
             <motion.div
               key={mode}
               initial={{ opacity: 0, scale: 0.9 }}
@@ -398,134 +368,211 @@ const ResultsPageV2 = () => {
         </div>
       </motion.section>
 
-      {/* POINTS SECTION */}
-      <motion.section
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1, duration: 0.6 }}
-        className="px-4 mb-12"
-      >
-        <div className="max-w-6xl mx-auto">
-          <h2 className={`text-2xl font-bold mb-8 text-center text-${currentMode.color}-400`}>
-            {mode === 'professional' && '💪 Strengths'}
-            {mode === 'fun' && '💣 Truth Bombs'}
-            {mode === 'roast' && '💀 Savage Roasts'}
-          </h2>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <AnimatePresence mode="wait">
-              {currentMode.points.map((point, index) => (
+      {/* SPLIT SCREEN LAYOUT */}
+      <div className="flex flex-col lg:flex-row gap-8 px-4 pb-20 max-w-7xl mx-auto">
+        
+        {/* LEFT COLUMN - Static Content */}
+        <motion.div
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="lg:w-2/5 space-y-8"
+        >
+          {/* Evolution Timeline */}
+          <div className="bg-gradient-to-br from-green-500/10 to-blue-500/10 rounded-2xl border border-green-400/20 backdrop-blur-sm p-6">
+            <div className="flex items-center gap-3 mb-6">
+              <TrendingUp className="w-6 h-6 text-green-400" />
+              <h3 className="text-xl font-semibold">Evolution Timeline</h3>
+            </div>
+            
+            <div className="relative">
+              <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-0.5 bg-gradient-to-b from-blue-500 to-purple-500" />
+              
+              <div className="space-y-6">
+                {[
+                  { year: 2023, type: 'Explorer', color: 'green' },
+                  { year: 2024, type: 'Builder', color: 'blue' },
+                  { year: 2025, type: 'Architect', color: 'purple' }
+                ].map((item, index) => (
+                  <motion.div
+                    key={item.year}
+                    initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.6 + index * 0.1, duration: 0.4 }}
+                    className={`flex items-center ${index % 2 === 0 ? 'justify-start' : 'justify-end'}`}
+                  >
+                    <div className={`w-5/12 ${index % 2 === 0 ? 'text-right pr-6' : 'text-left pl-6 order-1'}`}>
+                      <div className={`p-3 bg-${item.color}-500/10 rounded-lg border border-${item.color}-400/30`}>
+                        <div className="font-semibold text-sm">{item.year}</div>
+                        <div className="text-xs text-gray-300">{item.type}</div>
+                      </div>
+                    </div>
+                    
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ delay: 0.8 + index * 0.1, duration: 0.3 }}
+                      className={`w-8 h-8 bg-${item.color}-500 rounded-full border-4 border-gray-900 flex items-center justify-center z-10`}
+                    >
+                      <Calendar className="w-3 h-3 text-white" />
+                    </motion.div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Growth Suggestions */}
+          <div className="bg-gradient-to-br from-green-500/10 to-blue-500/10 rounded-2xl border border-green-400/20 backdrop-blur-sm p-6">
+            <div className="flex items-center gap-3 mb-6">
+              <Target className="w-6 h-6 text-green-400" />
+              <h3 className="text-xl font-semibold">Evolve Your Developer DNA</h3>
+            </div>
+            
+            <div className="space-y-4">
+              {insights.growthSuggestions?.slice(0, 3).map((suggestion, index) => (
                 <motion.div
-                  key={`${mode}-${index}`}
-                  initial={{ opacity: 0, y: 20, scale: 0.9 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -20, scale: 0.9 }}
-                  transition={{ 
-                    delay: index * 0.1, 
-                    duration: 0.4,
-                    ease: "easeOut"
-                  }}
-                  whileHover={{ 
-                    y: -5, 
-                    scale: 1.02,
-                    boxShadow: "0 20px 40px rgba(0,0,0,0.3)"
-                  }}
-                  className={`p-6 bg-gradient-to-br from-${currentMode.color}-500/10 to-purple-500/10 rounded-xl border border-${currentMode.color}-400/20 backdrop-blur-sm cursor-pointer transition-all duration-300`}
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.8 + index * 0.1, duration: 0.4 }}
+                  whileHover={{ y: -2 }}
+                  className="p-4 bg-white/5 rounded-lg border border-white/10"
                 >
                   <div className="flex items-start gap-3">
-                    <div className={`w-2 h-2 bg-${currentMode.color}-400 rounded-full mt-2 flex-shrink-0`} />
-                    <p className="text-gray-200 leading-relaxed">{point}</p>
+                    <Rocket className="w-4 h-4 text-green-400 flex-shrink-0 mt-0.5" />
+                    <p className="text-gray-200 text-sm leading-relaxed">{suggestion}</p>
                   </div>
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </div>
-        </div>
-      </motion.section>
-
-      {/* EVOLUTION TIMELINE */}
-      <motion.section
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.2, duration: 0.6 }}
-        className="px-4 mb-12"
-      >
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-2xl font-bold mb-8 text-center flex items-center justify-center gap-2">
-            <TrendingUp className="w-6 h-6 text-blue-400" />
-            Evolution Timeline
-          </h2>
-          
-          <div className="relative">
-            <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-0.5 bg-gradient-to-b from-blue-500 to-purple-500" />
-            
-            <div className="space-y-8">
-              {[
-                { year: 2023, type: 'Explorer', color: 'green' },
-                { year: 2024, type: 'Builder', color: 'blue' },
-                { year: 2025, type: 'Architect', color: 'purple' }
-              ].map((item, index) => (
-                <motion.div
-                  key={item.year}
-                  initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 1.4 + index * 0.2, duration: 0.6 }}
-                  className={`flex items-center ${index % 2 === 0 ? 'justify-start' : 'justify-end'}`}
-                >
-                  <div className={`w-5/12 ${index % 2 === 0 ? 'text-right pr-8' : 'text-left pl-8 order-1'}`}>
-                    <div className={`p-4 bg-${item.color}-500/10 rounded-lg border border-${item.color}-400/30`}>
-                      <div className="font-semibold text-lg">{item.year}</div>
-                      <div className="text-sm text-gray-300">{item.type}</div>
-                    </div>
-                  </div>
-                  
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ delay: 1.6 + index * 0.2, duration: 0.4 }}
-                    className={`w-12 h-12 bg-${item.color}-500 rounded-full border-4 border-gray-900 flex items-center justify-center z-10`}
-                  >
-                    <Calendar className="w-5 h-5 text-white" />
-                  </motion.div>
                 </motion.div>
               ))}
             </div>
           </div>
-        </div>
-      </motion.section>
+        </motion.div>
 
-      {/* IMPROVE YOUR DNA */}
-      <motion.section
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.6, duration: 0.6 }}
-        className="px-4 pb-20"
-      >
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-2xl font-bold mb-8 text-center flex items-center justify-center gap-2">
-            <Target className="w-6 h-6 text-green-400" />
-            Improve Your DNA
-          </h2>
-          
-          <div className="grid md:grid-cols-2 gap-6">
-            {insights.growthSuggestions?.map((suggestion, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.8 + index * 0.2, duration: 0.6 }}
-                whileHover={{ y: -5 }}
-                className="p-6 bg-gradient-to-br from-green-500/10 to-blue-500/10 rounded-xl border border-green-400/20 backdrop-blur-sm"
-              >
-                <div className="flex items-center gap-3">
-                  <Rocket className="w-5 h-5 text-green-400 flex-shrink-0" />
-                  <p className="text-gray-200">{suggestion}</p>
-                </div>
-              </motion.div>
-            ))}
+        {/* RIGHT COLUMN - Dynamic Tab Content */}
+        <motion.div
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="lg:w-3/5"
+        >
+          <div className="bg-gradient-to-br from-gray-800/50 to-purple-800/50 rounded-2xl border border-gray-700/50 backdrop-blur-sm overflow-hidden">
+            
+            {/* TAB CONTENT */}
+            <div className="p-8">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={mode}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-8"
+                >
+                  {/* Mode-specific Header Card */}
+                  <div className={`p-6 bg-gradient-to-br from-${currentMode.color}-500/10 to-purple-500/10 rounded-xl border border-${currentMode.color}-400/20 backdrop-blur-sm`}>
+                    <div className="flex items-center gap-3 mb-4">
+                      <Lightbulb className={`w-6 h-6 text-${currentMode.color}-400`} />
+                      <h4 className={`text-lg font-semibold text-${currentMode.color}-400`}>
+                        {mode === 'professional' && 'Professional Analysis'}
+                        {mode === 'fun' && 'Fun Facts & Truths'}
+                        {mode === 'roast' && 'Savage Roasts'}
+                      </h4>
+                    </div>
+                    <p className="text-gray-200 leading-relaxed">
+                      {mode === 'professional' && insights.coreInsight}
+                      {mode === 'fun' && insights.truthBombs[0] || insights.coreInsight}
+                      {mode === 'roast' && insights.roasts[0] || "You're too perfect to roast!"}
+                    </p>
+                  </div>
+
+                  {/* Mode-specific Points */}
+                  <div>
+                    <h4 className={`text-xl font-bold mb-6 text-${currentMode.color}-400`}>
+                      {mode === 'professional' && '💪 Key Strengths'}
+                      {mode === 'fun' && '💣 Truth Bombs'}
+                      {mode === 'roast' && '💀 Savage Roasts'}
+                    </h4>
+                    
+                    <div className="grid gap-4">
+                      {currentMode.points.map((point, index) => (
+                        <motion.div
+                          key={`${mode}-${index}`}
+                          initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          transition={{ 
+                            delay: index * 0.1, 
+                            duration: 0.3,
+                            ease: "easeOut"
+                          }}
+                          whileHover={{ 
+                            y: -2, 
+                            scale: 1.02,
+                            boxShadow: "0 10px 30px rgba(0,0,0,0.3)"
+                          }}
+                          className={`p-4 bg-gradient-to-br from-${currentMode.color}-500/10 to-purple-500/10 rounded-lg border border-${currentMode.color}-400/20 backdrop-blur-sm cursor-pointer transition-all duration-300`}
+                        >
+                          <div className="flex items-start gap-3">
+                            <div className={`w-2 h-2 bg-${currentMode.color}-400 rounded-full mt-2 flex-shrink-0`} />
+                            <p className="text-gray-200 leading-relaxed">{point}</p>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Additional Mode-specific Content */}
+                  {mode === 'professional' && (
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div className="p-4 bg-blue-500/10 rounded-lg border border-blue-400/20">
+                        <h5 className="font-semibold text-blue-400 mb-3">Career Suggestions</h5>
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                            <span className="text-sm text-gray-300">Software Architect</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                            <span className="text-sm text-gray-300">Technical Lead</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                            <span className="text-sm text-gray-300">DevOps Engineer</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="p-4 bg-blue-500/10 rounded-lg border border-blue-400/20">
+                        <h5 className="font-semibold text-blue-400 mb-3">Collaboration Style</h5>
+                        <p className="text-sm text-gray-300">
+                          Prefers structured collaboration and clear project boundaries
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  {mode === 'fun' && (
+                    <div className="p-4 bg-purple-500/10 rounded-lg border border-purple-400/20">
+                      <h5 className="font-semibold text-purple-400 mb-3">Fun Fact</h5>
+                      <p className="text-sm text-gray-300">
+                        Your coding style suggests you probably organize your socks by color and have strong opinions about indentation!
+                      </p>
+                    </div>
+                  )}
+
+                  {mode === 'roast' && (
+                    <div className="p-4 bg-red-500/10 rounded-lg border border-red-400/20">
+                      <h5 className="font-semibold text-red-400 mb-3">Final Roast</h5>
+                      <p className="text-sm text-gray-300">
+                        You write more documentation than actual code. Are you sure you're a developer and not a technical writer who got lost?
+                      </p>
+                    </div>
+                  )}
+                </motion.div>
+              </AnimatePresence>
+            </div>
           </div>
-        </div>
-      </motion.section>
+        </motion.div>
+      </div>
 
       {/* FLOATING ACTION BUTTONS */}
       <motion.div

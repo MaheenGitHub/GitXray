@@ -1,7 +1,7 @@
 {
-  "name": "devdna-backend",
+  "name": "gitxray-backend",
   "version": "1.0.0",
-  "description": "Dev DNA Backend API - GitHub Personality Analyzer",
+  "description": "GitXray Backend API - GitHub Personality Analyzer",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -10,7 +10,7 @@
     "lint": "eslint ."
   },
   "keywords": ["github", "api", "personality", "analyzer", "developer"],
-  "author": "Dev DNA Team",
+  "author": "GitXray Team",
   "license": "MIT",
   "dependencies": {
     "express": "^4.18.2",

@@ -107,7 +107,7 @@ const ShareableImage = ({ user, personality, repositories, className = '' }) => 
           if (navigator.share && navigator.canShare({ files: [file] })) {
             try {
               await navigator.share({
-                title: `Dev DNA - ${user.name || user.username}`,
+                title: `GitXray - ${user.name || user.username}`,
                 text: `I'm a ${personality.dominant_personality.name}! Discover your developer personality type.`,
                 files: [file]
               })
@@ -166,7 +166,7 @@ const ShareableImage = ({ user, personality, repositories, className = '' }) => 
               </div>
             </div>
             <div className="text-right">
-              <div className="text-sm text-white/60 mb-1">Dev DNA</div>
+              <div className="text-sm text-white/60 mb-1">GitXray</div>
               <div className="text-lg font-bold text-white">
                 {personality.dominant_personality.score}/100
               </div>
@@ -244,7 +244,7 @@ const ShareableImage = ({ user, personality, repositories, className = '' }) => 
                 <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
                   🧬
                 </div>
-                <span className="text-white/80 text-sm">Dev DNA - GitHub Personality Analyzer</span>
+                <span className="text-white/80 text-sm">GitXray - GitHub Personality Analyzer</span>
               </div>
               <div className="text-white/60 text-xs">
                 {new Date().toLocaleDateString()}

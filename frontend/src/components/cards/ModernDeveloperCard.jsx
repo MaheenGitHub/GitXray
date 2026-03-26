@@ -166,7 +166,7 @@ const ModernDeveloperCard = ({ user, personality, className = '' }) => {
           if (navigator.share && navigator.canShare({ files: [file] })) {
             try {
               await navigator.share({
-                title: `Dev DNA - ${user.name || user.username}`,
+                title: `GitXray - ${user.name || user.username}`,
                 text: `I'm a ${personality.dominant_personality.title}! Discover your developer personality type.`,
                 files: [file]
               })
@@ -230,7 +230,7 @@ const ModernDeveloperCard = ({ user, personality, className = '' }) => {
             </div>
             
             <div className="text-right">
-              <div className="text-sm text-white/60 mb-1">Dev DNA</div>
+              <div className="text-sm text-white/60 mb-1">GitXray</div>
               <div className="text-xl font-bold text-white">
                 {personality.dominant_personality.score}/100
               </div>
@@ -318,7 +318,7 @@ const ModernDeveloperCard = ({ user, personality, className = '' }) => {
         <div className={`bg-gradient-to-r ${gradient} p-4 text-center`}>
           <div className="flex items-center justify-center gap-2 text-white/80 text-xs">
             <Code2 className="w-4 h-4" />
-            <span>Dev DNA - GitHub Personality Analyzer</span>
+            <span>GitXray - GitHub Personality Analyzer</span>
             <Heart className="w-4 h-4" />
           </div>
         </div>

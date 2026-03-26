@@ -55,7 +55,7 @@ const ResultsPage = () => {
 
   const handleShare = async () => {
     const shareData = {
-      title: `Dev DNA - ${data.user.name || username}`,
+      title: `GitXray - ${data.user.name || username}`,
       text: `I'm a ${data.personality.dominant_personality.name}! Discover your developer personality type.`,
       url: window.location.href
     }

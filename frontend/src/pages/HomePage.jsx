@@ -76,7 +76,7 @@ const HomePage = () => {
               </motion.div>
             </motion.div>
             <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-              Dev DNA
+              GitXray
             </h1>
           </div>
           
