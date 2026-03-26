@@ -7,6 +7,7 @@ const express = require('express');
 const { body, param, validationResult } = require('express-validator');
 const githubService = require('../services/githubService');
 const { analyzeWithPersonality } = require('../services/analysisController');
+const behavioralAnalyzer = require('../services/behavioralAnalyzer');
 const logger = require('../utils/logger');
 
 const router = express.Router();
@@ -250,6 +251,165 @@ router.post('/analyze',
       
       res.status(statusCode).json({
         success: false,
+        message: error.message,
+        timestamp: new Date().toISOString()
+      });
+    }
+  }
+);
+
+/**
+ * GET /api/behavioral/:username
+ * Get deep behavioral analysis for a GitHub user
+ * 
+ * @param {string} username - GitHub username
+ * @returns {Object} Behavioral personality insights
+ */
+router.get('/behavioral/:username',
+  [
+    param('username')
+      .isLength({ min: 1, max: 39 })
+      .withMessage('Username must be between 1 and 39 characters')
+      .matches(/^[a-zA-Z0-9]([a-zA-Z0-9\-])*[a-zA-Z0-9]$/)
+      .withMessage('Username can only contain alphanumeric characters and hyphens, and cannot start or end with a hyphen')
+  ],
+  validateRequest,
+  async (req, res) => {
+    const { username } = req.params;
+    
+    try {
+      logger.info(`🔍 Starting behavioral analysis for GitHub user: ${username}`);
+      
+      // Get comprehensive user analysis from GitHub service
+      const githubAnalysis = await githubService.getUserAnalysis(username);
+      
+      // Perform personality analysis
+      const personalityAnalysis = await analyzeWithPersonality(githubAnalysis);
+      
+      // Extract behavioral insights
+      const behavioralInsights = personalityAnalysis.behavioral_insights;
+      
+      // Return behavioral analysis response
+      res.status(200).json({
+        success: true,
+        data: {
+          user: githubAnalysis.user,
+          behavioral_insights: behavioralInsights,
+          analysis_timestamp: new Date().toISOString()
+        },
+        message: `Behavioral analysis completed for: ${username}`,
+        timestamp: new Date().toISOString()
+      });
+      
+      logger.info(`✅ Behavioral analysis completed for ${username}`);
+      
+    } catch (error) {
+      logger.error(`❌ Behavioral analysis failed for ${username}:`, error);
+      
+      // Determine appropriate status code based on error type
+      let statusCode = 500;
+      let errorType = 'internal_error';
+      
+      if (error.message.includes('not found')) {
+        statusCode = 404;
+        errorType = 'user_not_found';
+      } else if (error.message.includes('rate limit')) {
+        statusCode = 429;
+        errorType = 'rate_limit_exceeded';
+      } else if (error.message.includes('Access forbidden')) {
+        statusCode = 403;
+        errorType = 'access_forbidden';
+      } else if (error.message.includes('Invalid GitHub API token')) {
+        statusCode = 401;
+        errorType = 'invalid_token';
+      }
+      
+      res.status(statusCode).json({
+        success: false,
+        error: errorType,
+        message: error.message,
+        timestamp: new Date().toISOString()
+      });
+    }
+  }
+);
+
+/**
+ * GET /api/roast/:username
+ * Get humorous roasts based on GitHub stats
+ * 
+ * @param {string} username - GitHub username
+ * @returns {Object} Array of roast lines
+ */
+router.get('/roast/:username',
+  [
+    param('username')
+      .isLength({ min: 1, max: 39 })
+      .withMessage('Username must be between 1 and 39 characters')
+      .matches(/^[a-zA-Z0-9]([a-zA-Z0-9\-])*[a-zA-Z0-9]$/)
+      .withMessage('Username can only contain alphanumeric characters and hyphens, and cannot start or end with a hyphen')
+  ],
+  validateRequest,
+  async (req, res) => {
+    const { username } = req.params;
+    
+    try {
+      logger.info(`🔥 Starting roast analysis for GitHub user: ${username}`);
+      
+      // Get user analysis from GitHub service
+      const githubAnalysis = await githubService.getUserAnalysis(username);
+      
+      // Generate roasts using behavioral analyzer
+      const roasts = behavioralAnalyzer.generateRoast({
+        repo_count: githubAnalysis.repositories.total_count,
+        stars: githubAnalysis.repositories.stats.total_stars,
+        forks: githubAnalysis.repositories.stats.total_forks
+      });
+      
+      // Return roast response
+      res.status(200).json({
+        success: true,
+        data: {
+          user: githubAnalysis.user,
+          roasts: roasts,
+          stats: {
+            repo_count: githubAnalysis.repositories.total_count,
+            stars: githubAnalysis.repositories.stats.total_stars,
+            forks: githubAnalysis.repositories.stats.total_forks,
+            avg_stars: githubAnalysis.repositories.total_count > 0 ? 
+              Math.floor(githubAnalysis.repositories.stats.total_stars / githubAnalysis.repositories.total_count) : 0
+          }
+        },
+        message: `Roast generated for: ${username}`,
+        timestamp: new Date().toISOString()
+      });
+      
+      logger.info(`🔥 Roast analysis completed for ${username}`);
+      
+    } catch (error) {
+      logger.error(`❌ Roast analysis failed for ${username}:`, error);
+      
+      // Determine appropriate status code based on error type
+      let statusCode = 500;
+      let errorType = 'internal_error';
+      
+      if (error.message.includes('not found')) {
+        statusCode = 404;
+        errorType = 'user_not_found';
+      } else if (error.message.includes('rate limit')) {
+        statusCode = 429;
+        errorType = 'rate_limit_exceeded';
+      } else if (error.message.includes('Access forbidden')) {
+        statusCode = 403;
+        errorType = 'access_forbidden';
+      } else if (error.message.includes('Invalid GitHub API token')) {
+        statusCode = 401;
+        errorType = 'invalid_token';
+      }
+      
+      res.status(statusCode).json({
+        success: false,
+        error: errorType,
         message: error.message,
         timestamp: new Date().toISOString()
       });

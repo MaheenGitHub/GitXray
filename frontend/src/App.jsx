@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import HomePage from './pages/HomePage'
 import ResultsPage from './pages/ResultsPage'
+import ResultsPageV2 from './pages/ResultsPageV2'
 import NotFoundPage from './pages/NotFoundPage'
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/results/:username" element={<ResultsPage />} />
+            <Route path="/results-v2/:username" element={<ResultsPageV2 />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </motion.div>

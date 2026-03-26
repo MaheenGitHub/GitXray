@@ -83,15 +83,16 @@ class GitHubService {
         type: options.type || 'all', // all, owner, member
         sort: options.sort || 'updated', // created, updated, pushed, full_name
         direction: options.direction || 'desc', // asc, desc
-        per_page: options.per_page || 100, // GitHub max is 100
+        per_page: options.per_page || 50, // Reduced from 100 for faster loading
         page: 1
       };
 
       let allRepositories = [];
       let hasMore = true;
+      let maxPages = 3; // Limit to 3 pages (150 repos max) for faster analysis
 
-      // Fetch all pages of repositories
-      while (hasMore) {
+      // Fetch limited pages of repositories
+      while (hasMore && params.page <= maxPages) {
         const response = await this.client.get(`/users/${username}/repos`, { params });
         
         allRepositories = allRepositories.concat(response.data);
@@ -237,9 +238,11 @@ class GitHubService {
     const languageStats = {};
     let processedCount = 0;
 
-    // Process repositories in batches to avoid overwhelming GitHub API
-    const batchSize = 10;
-    for (let i = 0; i < repositories.length; i += batchSize) {
+    // Process repositories in smaller batches for faster analysis
+    const batchSize = 5; // Reduced from 10 for faster processing
+    const maxReposToProcess = Math.min(repositories.length, 25); // Limit to 25 repos for language analysis
+    
+    for (let i = 0; i < maxReposToProcess; i += batchSize) {
       const batch = repositories.slice(i, i + batchSize);
       
       const languagePromises = batch.map(async (repo) => {

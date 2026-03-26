@@ -4,6 +4,7 @@
  */
 
 const personalityService = require('./personalityService');
+const behavioralAnalyzer = require('./behavioralAnalyzer');
 const logger = require('../utils/logger');
 
 /**
@@ -18,10 +19,25 @@ async function analyzeWithPersonality(githubData) {
     // Perform personality analysis
     const personalityAnalysis = personalityService.analyzePersonality(githubData);
     
+    // Generate behavioral insights
+    const behavioralInsights = behavioralAnalyzer.analyze({
+      repo_count: githubData.repositories.total_count,
+      stars: githubData.repositories.stats.total_stars,
+      forks: githubData.repositories.stats.total_forks,
+      languages: githubData.languages,
+      commit_pattern: 'consistent', // This would come from actual commit analysis
+      builder_score: personalityAnalysis.scores.builder || 0,
+      explorer_score: personalityAnalysis.scores.explorer || 0,
+      debugger_score: personalityAnalysis.scores.debugger || 0,
+      perfectionist_score: personalityAnalysis.scores.perfectionist || 0,
+      hustler_score: personalityAnalysis.scores.hustler || 0
+    });
+    
     // Combine with GitHub data
     const enhancedAnalysis = {
       ...githubData,
       personality: personalityAnalysis,
+      behavioral_insights: behavioralInsights,
       analysis_type: 'comprehensive'
     };
     

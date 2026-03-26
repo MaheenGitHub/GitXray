@@ -157,6 +157,7 @@ const ResultsPage = () => {
             <ShareableImage 
               user={user}
               personality={personality}
+              repositories={data.repositories}
               className="flex items-center gap-2"
             />
             <button

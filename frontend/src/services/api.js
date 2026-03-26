@@ -4,11 +4,16 @@ import toast from 'react-hot-toast'
 // Create axios instance with default configuration
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api',
-  timeout: 30000,
+  timeout: 60000, // Increased to 60 seconds for complex analysis
   headers: {
     'Content-Type': 'application/json',
   },
 })
+
+// Debug: Log the actual base URL being used
+console.log('🔧 API Base URL:', import.meta.env.VITE_API_BASE_URL);
+console.log('🔧 Fallback URL:', 'http://localhost:5000/api');
+console.log('🔧 Final Base URL:', api.defaults.baseURL);
 
 // Request interceptor for logging
 api.interceptors.request.use(
@@ -68,9 +73,22 @@ api.interceptors.response.use(
  */
 export const analyzeGitHubUser = async (username) => {
   try {
+    console.log('🚀 Making API call to:', `/analyze/${username}`);
+    console.log('🔧 Base URL:', api.defaults.baseURL);
+    
     const response = await api.get(`/analyze/${username}`)
+    console.log('✅ API response received:', response);
+    console.log('📊 Response data:', response.data);
+    console.log('📊 Response status:', response.status);
+    
     return response.data
   } catch (error) {
+    console.error('❌ API call failed:', error);
+    console.error('❌ Error response:', error.response);
+    console.error('❌ Error message:', error.message);
+    console.error('❌ Error code:', error.code);
+    
+    // Re-throw the error so it can be caught by the component
     throw new Error(error.response?.data?.message || 'Failed to analyze user')
   }
 }
@@ -128,6 +146,34 @@ export const getPersonalityType = async (type) => {
     return response.data
   } catch (error) {
     throw new Error(error.response?.data?.message || 'Failed to fetch personality type')
+  }
+}
+
+/**
+ * Get behavioral personality analysis
+ * @param {string} username - GitHub username
+ * @returns {Promise<Object>} Behavioral insights
+ */
+export const getBehavioralAnalysis = async (username) => {
+  try {
+    const response = await api.get(`/behavioral/${username}`)
+    return response.data
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Failed to analyze behavior')
+  }
+}
+
+/**
+ * Get GitHub profile roasts
+ * @param {string} username - GitHub username
+ * @returns {Promise<Object>} Roast analysis
+ */
+export const getRoastAnalysis = async (username) => {
+  try {
+    const response = await api.get(`/roast/${username}`)
+    return response.data
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Failed to generate roasts')
   }
 }
 

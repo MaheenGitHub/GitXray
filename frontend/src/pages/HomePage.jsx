@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Search, Github, Sparkles, Brain, Code2, Zap } from 'lucide-react'
+import { Search, Github, Sparkles, Brain, Code2, Zap, Rocket, Shield } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 const HomePage = () => {
   const [username, setUsername] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [useV2, setUseV2] = useState(true) // Default to new experience
   const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
@@ -25,8 +26,12 @@ const HomePage = () => {
     setIsLoading(true)
     
     try {
-      // Navigate to results page with the username
-      navigate(`/results/${username.toLowerCase()}`)
+      // Navigate to appropriate results page based on experience choice
+      if (useV2) {
+        navigate(`/results-v2/${username.toLowerCase()}`)
+      } else {
+        navigate(`/results/${username.toLowerCase()}`)
+      }
     } catch (error) {
       toast.error('An error occurred. Please try again.')
       setIsLoading(false)
@@ -149,6 +154,42 @@ const HomePage = () => {
               )}
             </motion.button>
           </form>
+        </motion.div>
+
+        {/* Experience Toggle */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.6 }}
+          className="text-center mb-8"
+        >
+          <div className="inline-flex items-center gap-4 p-1 bg-gray-800/50 rounded-full backdrop-blur-sm">
+            <span className="text-sm text-gray-400 px-3">Experience:</span>
+            <div className="flex gap-1">
+              <button
+                onClick={() => setUseV2(false)}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                  !useV2
+                    ? 'bg-gray-600 text-white'
+                    : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
+                }`}
+              >
+                <Shield className="w-4 h-4 inline mr-1" />
+                Classic
+              </button>
+              <button
+                onClick={() => setUseV2(true)}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                  useV2
+                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
+                    : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
+                }`}
+              >
+                <Rocket className="w-4 h-4 inline mr-1" />
+                V2 ✨
+              </button>
+            </div>
+          </div>
         </motion.div>
 
         {/* Features */}

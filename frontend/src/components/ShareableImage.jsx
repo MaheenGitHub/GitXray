@@ -3,7 +3,7 @@ import html2canvas from 'html2canvas'
 import { Download, Camera, Share2 } from 'lucide-react'
 import toast from 'react-hot-toast'
 
-const ShareableImage = ({ user, personality, className = '' }) => {
+const ShareableImage = ({ user, personality, repositories, className = '' }) => {
   const [isGenerating, setIsGenerating] = useState(false)
   const cardRef = useRef(null)
 
@@ -219,7 +219,7 @@ const ShareableImage = ({ user, personality, className = '' }) => {
           <div className="grid grid-cols-3 gap-4">
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center">
               <div className="text-2xl font-bold text-white">
-                {user.public_repos || 0}
+                {repositories?.total_count || 0}
               </div>
               <div className="text-xs text-white/60">Repositories</div>
             </div>
