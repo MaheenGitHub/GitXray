@@ -235,7 +235,7 @@ const ResultsPage = () => {
           <PersonalityCard personality={personality} />
         </motion.div>
 
-        {/* Stats Grid */}
+        {/* Core Competencies Grid */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -245,25 +245,25 @@ const ResultsPage = () => {
           {[
             {
               icon: Package,
-              label: 'Total Repos',
+              label: 'Project Portfolio',
               value: repositories.total_count,
               color: 'text-blue-500'
             },
             {
               icon: Star,
-              label: 'Total Stars',
+              label: 'Community Impact',
               value: repositories.stats.total_stars.toLocaleString(),
               color: 'text-yellow-500'
             },
             {
               icon: GitFork,
-              label: 'Total Forks',
+              label: 'Network Reach',
               value: repositories.stats.total_forks.toLocaleString(),
               color: 'text-purple-500'
             },
             {
               icon: Code2,
-              label: 'Languages',
+              label: 'Tech Diversity',
               value: Object.keys(languages).length,
               color: 'text-green-500'
             }
@@ -292,7 +292,7 @@ const ResultsPage = () => {
           >
             <h3 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
               <TrendingUp className="w-5 h-5 text-blue-500" />
-              Personality Scores
+              Cognitive Architecture
             </h3>
             <StatsChart scores={personality.scores} />
           </motion.div>
@@ -305,7 +305,7 @@ const ResultsPage = () => {
           >
             <h3 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
               <Code2 className="w-5 h-5 text-green-500" />
-              Language Distribution
+              Technology Ecosystem
             </h3>
             <LanguagePieChart languages={languages} />
           </motion.div>
@@ -321,7 +321,7 @@ const ResultsPage = () => {
           >
             <h3 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
               <Package className="w-5 h-5 text-purple-500" />
-              Repository Statistics
+              Project Analytics
             </h3>
             <RepoStatsChart repositoryStats={repositories.stats} />
           </motion.div>
@@ -334,11 +334,11 @@ const ResultsPage = () => {
           >
             <h3 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
               <Star className="w-5 h-5 text-yellow-500" />
-              Performance Metrics
+              Performance Indicators
             </h3>
             <div className="space-y-4">
               <div className="flex justify-between items-center p-3 bg-gray-800/50 rounded-lg">
-                <span className="text-gray-300">Average Stars per Repo</span>
+                <span className="text-gray-300">Engagement Rate</span>
                 <span className="text-white font-semibold">
                   {repositories.total_count > 0 
                     ? (repositories.stats.total_stars / repositories.total_count).toFixed(1)
@@ -347,7 +347,7 @@ const ResultsPage = () => {
                 </span>
               </div>
               <div className="flex justify-between items-center p-3 bg-gray-800/50 rounded-lg">
-                <span className="text-gray-300">Average Forks per Repo</span>
+                <span className="text-gray-300">Collaboration Index</span>
                 <span className="text-white font-semibold">
                   {repositories.total_count > 0 
                     ? (repositories.stats.total_forks / repositories.total_count).toFixed(1)
@@ -356,7 +356,7 @@ const ResultsPage = () => {
                 </span>
               </div>
               <div className="flex justify-between items-center p-3 bg-gray-800/50 rounded-lg">
-                <span className="text-gray-300">Original vs Forked Ratio</span>
+                <span className="text-gray-300">Innovation Ratio</span>
                 <span className="text-white font-semibold">
                   {repositories.total_count > 0 
                     ? `${((repositories.stats.original_count / repositories.total_count) * 100).toFixed(1)}%`
@@ -365,7 +365,7 @@ const ResultsPage = () => {
                 </span>
               </div>
               <div className="flex justify-between items-center p-3 bg-gray-800/50 rounded-lg">
-                <span className="text-gray-300">Account Age</span>
+                <span className="text-gray-300">Developer Tenure</span>
                 <span className="text-white font-semibold">
                   {Math.floor((new Date() - new Date(user.created_at)) / (365.25 * 24 * 60 * 60 * 1000))} years
                 </span>
@@ -374,7 +374,7 @@ const ResultsPage = () => {
           </motion.div>
         </div>
 
-        {/* Insights Section */}
+        {/* Strategic Insights Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -389,7 +389,7 @@ const ResultsPage = () => {
           >
             <div className="flex items-center gap-3 mb-4">
               <Target className="w-6 h-6 text-blue-500" />
-              <h3 className="text-lg font-semibold text-white">Strengths</h3>
+              <h3 className="text-lg font-semibold text-white">Core Advantages</h3>
             </div>
             <ul className="space-y-2">
               {personality.insights.strengths.map((strength, index) => (
@@ -409,7 +409,7 @@ const ResultsPage = () => {
           >
             <div className="flex items-center gap-3 mb-4">
               <Lightbulb className="w-6 h-6 text-yellow-500" />
-              <h3 className="text-lg font-semibold text-white">Recommendations</h3>
+              <h3 className="text-lg font-semibold text-white">Growth Opportunities</h3>
             </div>
             <ul className="space-y-2">
               {personality.insights.recommendations.map((rec, index) => (
@@ -429,7 +429,7 @@ const ResultsPage = () => {
           >
             <div className="flex items-center gap-3 mb-4">
               <Briefcase className="w-6 h-6 text-green-500" />
-              <h3 className="text-lg font-semibold text-white">Career Paths</h3>
+              <h3 className="text-lg font-semibold text-white">Professional Pathways</h3>
             </div>
             <ul className="space-y-2">
               {personality.insights.career_suggestions.map((career, index) => (

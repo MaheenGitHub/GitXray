@@ -142,18 +142,33 @@ const ResultsPageV2 = () => {
         const analysisData = enhancedData || {
           user: actualData.user,
           behavioral_insights: {
-            coreInsight: `${actualData.personality.dominant_personality.name}: ${actualData.personality.dominant_personality.description}`,
-            truthBombs: actualData.personality.insights.strengths.slice(0, 4),
+            coreInsight: {
+              message: `${actualData.personality.dominant_personality.name}: ${actualData.personality.dominant_personality.description}`,
+              reason: "Based on personality analysis"
+            },
+            truthBombs: actualData.personality.insights.strengths.slice(0, 4).map(strength => ({
+              message: strength,
+              reason: "Derived from personality strengths"
+            })),
             strengths: actualData.personality.insights.strengths,
             blindSpots: actualData.personality.insights.improvement_areas || ['Keep learning and growing'],
             growthSuggestions: actualData.personality.insights.recommendations,
-            identityStatement: `The ${actualData.personality.dominant_personality.name}`,
-            roasts: ['You\'re doing great! Keep up the good work!']
+            identityStatement: {
+              message: `The ${actualData.personality.dominant_personality.name}`,
+              reason: "Based on dominant personality type"
+            },
+            roasts: [{
+              message: "You're doing great! Keep up the good work!",
+              reason: "Positive encouragement"
+            }]
           }
         };
         
         const finalRoastData = roastData || {
-          roasts: ['You\'re doing great! Keep up the good work!'],
+          roasts: [{
+            message: "You're doing great! Keep up the good work!",
+            reason: "Positive encouragement"
+          }],
           stats: {
             repo_count: actualData.repositories?.total_count || 0,
             stars: actualData.repositories?.stats?.total_stars || 0,
@@ -218,23 +233,39 @@ const ResultsPageV2 = () => {
   const { analysis, stats } = data;
   const insights = analysis?.behavioral_insights || {};
 
+  // Helper function to extract message from object or handle string fallback
+  const extractMessage = (item) => {
+    if (typeof item === 'object' && item !== null) {
+      return item.message || '';
+    }
+    return item || '';
+  };
+
+  // Helper function to extract reason from object
+  const extractReason = (item) => {
+    if (typeof item === 'object' && item !== null) {
+      return item.reason || '';
+    }
+    return '';
+  };
+
   const modes = {
     professional: {
       color: 'blue',
-      insight: insights.coreInsight,
-      points: insights.strengths,
+      insight: typeof insights.coreInsight === 'object' ? insights.coreInsight.message : insights.coreInsight,
+      points: insights.strengths || [],
       title: "Professional Analysis",
     },
     fun: {
       color: 'purple',
-      insight: insights.truthBombs[0] || insights.coreInsight,
-      points: insights.truthBombs,
+      insight: insights.truthBombs?.[0] ? extractMessage(insights.truthBombs[0]) : (typeof insights.coreInsight === 'object' ? insights.coreInsight.message : insights.coreInsight),
+      points: insights.truthBombs || [],
       title: "Fun Facts",
     },
     roast: {
       color: 'red',
-      insight: insights.roasts[0] || "You're too perfect to roast!",
-      points: insights.roasts,
+      insight: insights.roasts?.[0] ? extractMessage(insights.roasts[0]) : "You're too perfect to roast!",
+      points: insights.roasts || [],
       title: "Savage Analysis",
     }
   };
@@ -284,10 +315,10 @@ const ResultsPageV2 = () => {
                 transition={{ duration: 0.4, delay: 0.2 }}
                 className="inline-block"
               >
-                <div className="px-4 py-2 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full border border-purple-400/30 backdrop-blur-sm">
+                <div className={`px-4 py-2 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full border border-purple-400/30 backdrop-blur-sm`}>
                   <div className="flex items-center gap-2">
                     <Shield className="w-5 h-5 text-purple-400" />
-                    <span className="font-semibold">{insights.identityStatement}</span>
+                    <span className="font-semibold">{typeof insights.identityStatement === 'object' ? insights.identityStatement.message : insights.identityStatement}</span>
                   </div>
                 </div>
               </motion.div>
@@ -469,23 +500,6 @@ const ResultsPageV2 = () => {
                   transition={{ duration: 0.3 }}
                   className="space-y-8"
                 >
-                  {/* Mode-specific Header Card */}
-                  <div className={`p-6 bg-gradient-to-br from-${currentMode.color}-500/10 to-purple-500/10 rounded-xl border border-${currentMode.color}-400/20 backdrop-blur-sm`}>
-                    <div className="flex items-center gap-3 mb-4">
-                      <Lightbulb className={`w-6 h-6 text-${currentMode.color}-400`} />
-                      <h4 className={`text-lg font-semibold text-${currentMode.color}-400`}>
-                        {mode === 'professional' && 'Professional Analysis'}
-                        {mode === 'fun' && 'Fun Facts & Truths'}
-                        {mode === 'roast' && 'Savage Roasts'}
-                      </h4>
-                    </div>
-                    <p className="text-gray-200 leading-relaxed">
-                      {mode === 'professional' && insights.coreInsight}
-                      {mode === 'fun' && insights.truthBombs[0] || insights.coreInsight}
-                      {mode === 'roast' && insights.roasts[0] || "You're too perfect to roast!"}
-                    </p>
-                  </div>
-
                   {/* Mode-specific Points */}
                   <div>
                     <h4 className={`text-xl font-bold mb-6 text-${currentMode.color}-400`}>
@@ -495,29 +509,38 @@ const ResultsPageV2 = () => {
                     </h4>
                     
                     <div className="grid gap-4">
-                      {currentMode.points.map((point, index) => (
-                        <motion.div
-                          key={`${mode}-${index}`}
-                          initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                          animate={{ opacity: 1, y: 0, scale: 1 }}
-                          transition={{ 
-                            delay: index * 0.1, 
-                            duration: 0.3,
-                            ease: "easeOut"
-                          }}
-                          whileHover={{ 
-                            y: -2, 
-                            scale: 1.02,
-                            boxShadow: "0 10px 30px rgba(0,0,0,0.3)"
-                          }}
-                          className={`p-4 bg-gradient-to-br from-${currentMode.color}-500/10 to-purple-500/10 rounded-lg border border-${currentMode.color}-400/20 backdrop-blur-sm cursor-pointer transition-all duration-300`}
-                        >
-                          <div className="flex items-start gap-3">
-                            <div className={`w-2 h-2 bg-${currentMode.color}-400 rounded-full mt-2 flex-shrink-0`} />
-                            <p className="text-gray-200 leading-relaxed">{point}</p>
-                          </div>
-                        </motion.div>
-                      ))}
+                      {currentMode.points.map((point, index) => {
+                        const message = extractMessage(point);
+                        const reason = extractReason(point);
+                        return (
+                          <motion.div
+                            key={`${mode}-${index}`}
+                            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            transition={{ 
+                              delay: index * 0.1, 
+                              duration: 0.3,
+                              ease: "easeOut"
+                            }}
+                            whileHover={{ 
+                              y: -2, 
+                              scale: 1.02,
+                              boxShadow: "0 10px 30px rgba(0,0,0,0.3)"
+                            }}
+                            className={`p-4 bg-gradient-to-br from-${currentMode.color}-500/10 to-purple-500/10 rounded-lg border border-${currentMode.color}-400/20 backdrop-blur-sm cursor-pointer transition-all duration-300`}
+                          >
+                            <div className="flex items-start gap-3">
+                              <div className={`w-2 h-2 bg-${currentMode.color}-400 rounded-full mt-2 flex-shrink-0`} />
+                              <div className="flex-1">
+                                <p className="text-gray-200 leading-relaxed font-medium">{message}</p>
+                                {reason && (
+                                  <p className="text-gray-400 text-sm mt-2 italic">{reason}</p>
+                                )}
+                              </div>
+                            </div>
+                          </motion.div>
+                        );
+                      })}
                     </div>
                   </div>
 

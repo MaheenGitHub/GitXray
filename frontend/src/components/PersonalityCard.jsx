@@ -107,7 +107,7 @@ const PersonalityCard = ({ personality }) => {
         >
           <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
             <Target className="w-5 h-5 text-blue-500" />
-            Key Traits
+            Behavioral Characteristics
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {dominant_personality.traits.map((trait, index) => (
@@ -133,7 +133,7 @@ const PersonalityCard = ({ personality }) => {
         >
           <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
             <Users className="w-5 h-5 text-purple-500" />
-            All Personality Scores
+            Personality Spectrum Analysis
           </h3>
           <div className="space-y-3">
             {Object.entries(scores).map(([type, score]) => {
@@ -168,7 +168,7 @@ const PersonalityCard = ({ personality }) => {
                       </span>
                       {isDominant && (
                         <span className="px-2 py-1 bg-blue-600 text-white text-xs rounded-full">
-                          Dominant
+                          Primary Type
                         </span>
                       )}
                     </div>

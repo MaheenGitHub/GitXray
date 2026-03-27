@@ -360,11 +360,13 @@ router.get('/roast/:username',
       const githubAnalysis = await githubService.getUserAnalysis(username);
       
       // Generate roasts using behavioral analyzer
-      const roasts = behavioralAnalyzer.generateRoast({
+      const avgStars = githubAnalysis.repositories.total_count > 0 ? 
+        githubAnalysis.repositories.stats.total_stars / githubAnalysis.repositories.total_count : 0;
+      const roasts = behavioralAnalyzer.roast({
         repo_count: githubAnalysis.repositories.total_count,
         stars: githubAnalysis.repositories.stats.total_stars,
         forks: githubAnalysis.repositories.stats.total_forks
-      });
+      }, avgStars);
       
       // Return roast response
       res.status(200).json({

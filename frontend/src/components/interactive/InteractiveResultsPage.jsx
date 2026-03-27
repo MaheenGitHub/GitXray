@@ -188,9 +188,9 @@ const InteractiveResultsPage = () => {
         {/* Personality Analysis Section */}
         <motion.div variants={itemVariants}>
           <ExpandableSection
-            title="Personality Analysis"
+            title="Cognitive Blueprint"
             icon={<Brain className="w-5 h-5 text-blue-400" />}
-            tooltip="Detailed analysis of your coding personality based on GitHub activity patterns"
+            tooltip="Deep analysis of your coding psychology and problem-solving approaches"
             isExpanded={expandedSections.personality}
             className="mb-6"
           >
@@ -282,9 +282,9 @@ const InteractiveResultsPage = () => {
         {/* Insights Section */}
         <motion.div variants={itemVariants}>
           <ExpandableSection
-            title="Behavioral Insights"
+            title="Behavioral Patterns"
             icon={<Lightbulb className="w-5 h-5 text-amber-400" />}
-            tooltip="AI-powered insights about your coding patterns and habits"
+            tooltip="AI-driven insights into your coding behaviors and development habits"
             isExpanded={expandedSections.insights}
             className="mb-6"
           >
@@ -336,53 +336,53 @@ const InteractiveResultsPage = () => {
         {/* Metrics Section */}
         <motion.div variants={itemVariants}>
           <ExpandableSection
-            title="Repository Metrics"
+            title="Development Analytics"
             icon={<Target className="w-5 h-5 text-green-400" />}
-            tooltip="Detailed statistics about your repositories and coding activity"
+            tooltip="Comprehensive statistics about your coding activity and project contributions"
             isExpanded={expandedSections.metrics}
             className="mb-6"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <MetricCard
-                title="Total Repositories"
+                title="Code Projects"
                 value={repositories.length}
                 icon={<Package className="w-5 h-5" />}
                 color="blue"
-                description="All public repositories"
+                description="Active development repositories"
                 delay={0}
               />
               
               <MetricCard
-                title="Total Stars"
+                title="Community Recognition"
                 value={repositories.reduce((sum, repo) => sum + (repo.stargazers_count || 0), 0)}
                 icon={<Star className="w-5 h-5" />}
                 color="amber"
-                description="Stars across all repos"
+                description="Total stars earned"
                 delay={0.1}
               />
               
               <MetricCard
-                title="Total Forks"
+                title="Collaboration Impact"
                 value={repositories.reduce((sum, repo) => sum + (repo.forks_count || 0), 0)}
                 icon={<GitFork className="w-5 h-5" />}
                 color="purple"
-                description="Forks across all repos"
+                description="Project forks created"
                 delay={0.2}
               />
               
               <MetricCard
-                title="Languages Used"
+                title="Technology Stack"
                 value={Object.keys(languages || {}).length}
                 icon={<TrendingUp className="w-5 h-5" />}
                 color="green"
-                description="Different programming languages"
+                description="Programming languages used"
                 delay={0.3}
               />
             </div>
 
             {/* Language Distribution */}
             <div className="mt-8">
-              <h4 className="text-lg font-semibold text-white mb-4">Language Distribution</h4>
+              <h4 className="text-lg font-semibold text-white mb-4">Technology Landscape</h4>
               <div className="space-y-3">
                 {Object.entries(languages || {})
                   .sort(([,a], [,b]) => b - a)
@@ -418,9 +418,9 @@ const InteractiveResultsPage = () => {
         {/* Recommendations Section */}
         <motion.div variants={itemVariants}>
           <ExpandableSection
-            title="Recommendations"
+            title="Growth Strategies"
             icon={<Target className="w-5 h-5 text-purple-400" />}
-            tooltip="Personalized recommendations to improve your development journey"
+            tooltip="Personalized action items to accelerate your professional development"
             isExpanded={expandedSections.recommendations}
             className="mb-6"
           >

@@ -86,7 +86,7 @@ const HomePage = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-xl md:text-2xl text-gray-300 mb-2"
           >
-            Discover Your Developer Personality
+            Decode Your Developer DNA
           </motion.p>
           
           <motion.p
@@ -95,7 +95,7 @@ const HomePage = () => {
             transition={{ duration: 0.8, delay: 0.3 }}
             className="text-gray-400 max-w-2xl mx-auto"
           >
-            Analyze GitHub profiles to uncover unique coding patterns, personality traits, and career insights
+            Transform your GitHub activity into actionable insights about your coding style, team dynamics, and career trajectory
           </motion.p>
         </motion.div>
 
@@ -149,7 +149,7 @@ const HomePage = () => {
               ) : (
                 <>
                   <Search className="w-5 h-5" />
-                  <span>Analyze Developer DNA</span>
+                  <span>Unlock Your Coding Potential</span>
                 </>
               )}
             </motion.button>
@@ -202,20 +202,20 @@ const HomePage = () => {
           {[
             {
               icon: Brain,
-              title: 'Personality Analysis',
-              description: 'Discover your unique developer personality type based on coding patterns',
+              title: 'Cognitive Profile',
+              description: 'Deep dive into your problem-solving approaches and decision-making patterns',
               color: 'text-blue-500'
             },
             {
               icon: Code2,
-              title: 'Code Insights',
-              description: 'Get detailed analysis of your coding habits and technology preferences',
+              title: 'Technical Signature',
+              description: 'Explore your unique coding fingerprint and technology ecosystem preferences',
               color: 'text-purple-500'
             },
             {
               icon: Zap,
-              title: 'Career Guidance',
-              description: 'Receive personalized career suggestions based on your developer profile',
+              title: 'Growth Trajectory',
+              description: 'Map your professional evolution and identify optimal development opportunities',
               color: 'text-yellow-500'
             }
           ].map((feature, index) => (
@@ -240,7 +240,7 @@ const HomePage = () => {
           transition={{ duration: 0.5, delay: 0.8 }}
           className="mt-12 text-center"
         >
-          <p className="text-gray-400 mb-4">Try these popular developers:</p>
+          <p className="text-gray-400 mb-4">Explore these influential developers:</p>
           <div className="flex flex-wrap justify-center gap-2">
             {['octocat', 'torvalds', 'gaearon', 'sindresorhus', 'addyosmani'].map((sample) => (
               <button
