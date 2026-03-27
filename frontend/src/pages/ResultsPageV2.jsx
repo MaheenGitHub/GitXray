@@ -391,7 +391,9 @@ const ResultsPageV2 = () => {
               <div className={`p-8 bg-gradient-to-br from-${currentMode.color}-500/10 to-purple-500/10 rounded-2xl border border-${currentMode.color}-400/20 backdrop-blur-sm`}>
                 <Lightbulb className={`w-8 h-8 text-${currentMode.color}-400 mx-auto mb-4`} />
                 <p className="text-lg md:text-xl text-gray-200 leading-relaxed">
-                  {currentMode.insight}
+                  {mode === 'professional' && "You're a consistent builder who values structure and reliability in your projects."}
+                  {mode === 'fun' && "You're like a magpie - attracted to shiny new technologies and frameworks!"}
+                  {mode === 'roast' && "Your GitHub profile has more commitment issues than a teenager in a relationship."}
                 </p>
               </div>
             </motion.div>
@@ -500,6 +502,23 @@ const ResultsPageV2 = () => {
                   transition={{ duration: 0.3 }}
                   className="space-y-8"
                 >
+                  {/* Mode-specific Header Card */}
+                  <div className={`p-6 bg-gradient-to-br from-${currentMode.color}-500/10 to-purple-500/10 rounded-xl border border-${currentMode.color}-400/20 backdrop-blur-sm`}>
+                    <div className="flex items-center gap-3 mb-4">
+                      <Lightbulb className={`w-6 h-6 text-${currentMode.color}-400`} />
+                      <h4 className={`text-lg font-semibold text-${currentMode.color}-400`}>
+                        {mode === 'professional' && 'Professional Analysis'}
+                        {mode === 'fun' && 'Fun Facts & Truths'}
+                        {mode === 'roast' && 'Savage Roasts'}
+                      </h4>
+                    </div>
+                    <p className="text-gray-200 leading-relaxed">
+                      {mode === 'professional' && "Based on your repository patterns, you demonstrate strong architectural thinking and systematic approach to development."}
+                      {mode === 'fun' && "Your coding adventures suggest you collect programming languages like Pokemon cards!"}
+                      {mode === 'roast' && "Let's be honest - your commit history looks like a roller coaster of motivation and procrastination."}
+                    </p>
+                  </div>
+
                   {/* Mode-specific Points */}
                   <div>
                     <h4 className={`text-xl font-bold mb-6 text-${currentMode.color}-400`}>
