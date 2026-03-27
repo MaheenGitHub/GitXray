@@ -393,7 +393,7 @@ const ResultsPageV2 = () => {
                 <p className="text-lg md:text-xl text-gray-200 leading-relaxed">
                   {mode === 'professional' && "You're a consistent builder who values structure and reliability in your projects."}
                   {mode === 'fun' && "You're like a magpie - attracted to shiny new technologies and frameworks!"}
-                  {mode === 'roast' && "Your GitHub profile has more commitment issues than a teenager in a relationship."}
+                  {mode === 'roast' && "Wo (Profile) dekhny mn kaisi seedhi saadhi lagti 😂 Hai bolti k wo toh Kuch nahi samjhti"}
                 </p>
               </div>
             </motion.div>
@@ -505,17 +505,18 @@ const ResultsPageV2 = () => {
                   {/* Mode-specific Header Card */}
                   <div className={`p-6 bg-gradient-to-br from-${currentMode.color}-500/10 to-purple-500/10 rounded-xl border border-${currentMode.color}-400/20 backdrop-blur-sm`}>
                     <div className="flex items-center gap-3 mb-4">
-                      <Lightbulb className={`w-6 h-6 text-${currentMode.color}-400`} />
+                      {mode === 'professional' && <Lightbulb className={`w-6 h-6 text-${currentMode.color}-400`} />}
+                      {mode === 'fun' && <Lightbulb className={`w-6 h-6 text-${currentMode.color}-400`} />}
                       <h4 className={`text-lg font-semibold text-${currentMode.color}-400`}>
                         {mode === 'professional' && 'Professional Analysis'}
                         {mode === 'fun' && 'Fun Facts & Truths'}
-                        {mode === 'roast' && 'Savage Roasts'}
+                        {mode === 'roast' && 'Hehe Let\'s be Honest'}
                       </h4>
                     </div>
                     <p className="text-gray-200 leading-relaxed">
                       {mode === 'professional' && "Based on your repository patterns, you demonstrate strong architectural thinking and systematic approach to development."}
                       {mode === 'fun' && "Your coding adventures suggest you collect programming languages like Pokemon cards!"}
-                      {mode === 'roast' && "Let's be honest - your commit history looks like a roller coaster of motivation and procrastination."}
+                      {mode === 'roast' && "Your commit history looks like a roller coaster of motivation and procrastination."}
                     </p>
                   </div>
 
@@ -524,7 +525,7 @@ const ResultsPageV2 = () => {
                     <h4 className={`text-xl font-bold mb-6 text-${currentMode.color}-400`}>
                       {mode === 'professional' && '💪 Key Strengths'}
                       {mode === 'fun' && '💣 Truth Bombs'}
-                      {mode === 'roast' && '💀 Savage Roasts'}
+                      {mode === 'roast' && '💀 Seedhi Baat No Bakwaas'}
                     </h4>
                     
                     <div className="grid gap-4">
@@ -603,9 +604,9 @@ const ResultsPageV2 = () => {
 
                   {mode === 'roast' && (
                     <div className="p-4 bg-red-500/10 rounded-lg border border-red-400/20">
-                      <h5 className="font-semibold text-red-400 mb-3">Final Roast</h5>
+                      <h5 className="font-semibold text-red-400 mb-3">Bye Byeeee!</h5>
                       <p className="text-sm text-gray-300">
-                        You write more documentation than actual code. Are you sure you're a developer and not a technical writer who got lost?
+                        Sach bola tha maine, thoda sa rough tha tone,<br/>Dil pe mat lena yaar… it was all for fun alone.
                       </p>
                     </div>
                   )}
