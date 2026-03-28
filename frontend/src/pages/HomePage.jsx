@@ -7,7 +7,7 @@ import toast from 'react-hot-toast'
 const HomePage = () => {
   const [username, setUsername] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const [useV2, setUseV2] = useState(true) // Default to new experience
+  const [useV2, setUseV2] = useState(false) // Default to Classic experience
   const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
@@ -99,6 +99,42 @@ const HomePage = () => {
           </motion.p>
         </motion.div>
 
+        {/* Experience Selector - Moved to Top and Centered */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="flex justify-center mb-8"
+        >
+          <div className="flex items-center gap-6 p-2 bg-gray-800/50 rounded-full backdrop-blur-sm">
+            <span className="text-xl font-bold bg-gradient-to-r from-cyan-400 to-white bg-clip-text text-transparent border-l-2 border-cyan-500 pl-3">Experience:</span>
+            <div className="flex gap-1">
+              <button
+                onClick={() => setUseV2(false)}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                  !useV2
+                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
+                    : 'bg-gray-700/50 text-gray-400 hover:text-white hover:bg-gray-600/50'
+                }`}
+              >
+                <Shield className="w-4 h-4 inline mr-1" />
+                Classic
+              </button>
+              <button
+                onClick={() => setUseV2(true)}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                  useV2
+                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
+                    : 'bg-gray-700/50 text-gray-400 hover:text-white hover:bg-gray-600/50'
+                }`}
+              >
+                <Rocket className="w-4 h-4 inline mr-1" />
+                V2 ✨
+              </button>
+            </div>
+          </div>
+        </motion.div>
+
         {/* Main Form */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
@@ -154,42 +190,6 @@ const HomePage = () => {
               )}
             </motion.button>
           </form>
-        </motion.div>
-
-        {/* Experience Toggle */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.6 }}
-          className="text-center mb-8"
-        >
-          <div className="inline-flex items-center gap-4 p-1 bg-gray-800/50 rounded-full backdrop-blur-sm">
-            <span className="text-sm text-gray-400 px-3">Experience:</span>
-            <div className="flex gap-1">
-              <button
-                onClick={() => setUseV2(false)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-                  !useV2
-                    ? 'bg-gray-600 text-white'
-                    : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
-                }`}
-              >
-                <Shield className="w-4 h-4 inline mr-1" />
-                Classic
-              </button>
-              <button
-                onClick={() => setUseV2(true)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-                  useV2
-                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
-                    : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
-                }`}
-              >
-                <Rocket className="w-4 h-4 inline mr-1" />
-                V2 ✨
-              </button>
-            </div>
-          </div>
         </motion.div>
 
         {/* Features */}
