@@ -64,7 +64,26 @@ class GitHubService {
    */
   async getUserProfile(username) {
     try {
-      const response = await this.client.get(`/users/${username}`);
+      // Force fresh API call with cache-busting
+      const timestamp = Date.now();
+      const response = await this.client.get(`/users/${username}?t=${timestamp}`);
+      
+      // API Validation: Log rate limit headers
+      const rateLimitRemaining = response.headers['x-ratelimit-remaining'];
+      const rateLimitReset = response.headers['x-ratelimit-reset'];
+      const githubDate = response.headers['date'];
+      
+      console.log('🔍 GITHUB API RATE LIMIT INFO:');
+      console.log('Rate Limit Remaining:', rateLimitRemaining);
+      console.log('Rate Limit Reset:', rateLimitReset);
+      console.log('GitHub API Date:', githubDate);
+      console.log('Response Headers:', JSON.stringify(response.headers, null, 2));
+      
+      if (rateLimitRemaining === '0') {
+        logger.warn('⚠️ GitHub API rate limit exceeded!');
+        throw new Error('GitHub API rate limit exceeded. Please try again later.');
+      }
+      
       return response.data;
     } catch (error) {
       this.handleGitHubError(error, 'user profile', username);
@@ -79,12 +98,15 @@ class GitHubService {
    */
   async getUserRepositories(username, options = {}) {
     try {
+      // Force fresh API call with cache-busting
+      const timestamp = Date.now();
       const params = {
         type: options.type || 'all', // all, owner, member
         sort: options.sort || 'updated', // created, updated, pushed, full_name
         direction: options.direction || 'desc', // asc, desc
         per_page: options.per_page || 50, // Reduced from 100 for faster loading
-        page: 1
+        page: 1,
+        t: timestamp // Cache-busting parameter
       };
 
       let allRepositories = [];
@@ -143,7 +165,7 @@ class GitHubService {
    */
   async getUserAnalysis(username) {
     try {
-      logger.info(`Starting analysis for GitHub user: ${username}`);
+      logger.info(`🔍 REAL API CALL for GitHub user: ${username}`);
 
       // Fetch user profile and repositories in parallel
       const [userProfile, repositories] = await Promise.all([
@@ -151,8 +173,21 @@ class GitHubService {
         this.getUserRepositories(username)
       ]);
 
+      // DEBUG: Log the ACTUAL GitHub API response
+      console.log('🔍 REAL GITHUB DATA:');
+      console.log('User Profile:', JSON.stringify(userProfile, null, 2));
+      console.log('Repositories Count:', repositories.length);
+      console.log('User Followers:', userProfile.followers);
+      console.log('User Public Repos:', userProfile.public_repos);
+      
       // Calculate basic statistics
       const stats = this.calculateBasicStats(repositories);
+      
+      // DEBUG: Log the calculated stats
+      console.log('🔍 CALCULATED STATS:');
+      console.log('Total Stars:', stats.total_stars);
+      console.log('Total Forks:', stats.total_forks);
+      console.log('Repository List Length:', repositories.length);
       
       // Fetch languages for all repositories (with concurrency limit)
       const languages = await this.getAllLanguages(username, repositories);
@@ -175,10 +210,13 @@ class GitHubService {
         repositories: {
           total_count: repositories.length,
           public_repos: userProfile.public_repos,
-          stats: stats
+          stats: stats,
+          list: repositories // Add individual repository list
         },
         languages: languages,
-        analysis_timestamp: new Date().toISOString()
+        analysis_timestamp: new Date().toISOString(),
+        fetch_timestamp: new Date().toISOString(), // Current fetch time
+        cache_bust: Date.now() // Proof of fresh fetch
       };
 
       logger.info(`Analysis completed for ${username}: ${repositories.length} repos, ${Object.keys(languages).length} languages`);

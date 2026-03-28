@@ -4,10 +4,6 @@ import { motion } from 'framer-motion'
 import { ArrowLeft, Github, Brain, Star, GitFork, Users, Package, Code2, Share2, Download } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { analyzeGitHubUser } from '../services/api'
-import LanguageDistributionChart from '../components/charts/LanguageDistributionChart'
-import PersonalityRadarChart from '../components/charts/PersonalityRadarChart'
-import RepoHighlights from '../components/charts/RepoHighlights'
-import CareerMatch from '../components/charts/CareerMatch'
 
 const ResultsPage = () => {
   console.log('🔍 ResultsPage component initializing...');
@@ -169,47 +165,24 @@ const ResultsPage = () => {
 
   const { user, repositories, languages, personality } = data
 
-  // Comprehensive debugging
-  console.log('🔍 DETAILED DATA STRUCTURE ANALYSIS:');
-  console.log('Full data object:', data);
-  console.log('User object:', user);
-  console.log('Repositories object:', repositories);
-  console.log('Languages object:', languages);
-  console.log('Personality object:', personality);
-  console.log('Data type checks:', {
-    data: typeof data,
-    user: typeof user,
-    repositories: typeof repositories,
-    languages: typeof languages,
-    personality: typeof personality
-  });
-  console.log('Value checks:', {
-    userFollowers: user?.followers,
-    userUsername: user?.username,
-    repoTotalCount: repositories?.total_count,
-    repoStats: repositories?.stats,
-    repoStars: repositories?.stats?.total_stars,
-    languagesCount: Object.keys(languages || {}).length
-  });
-
   // Core stats array
   const coreStats = [
     {
       icon: Package,
       label: 'Project Portfolio',
-      value: repositories?.total_count || 0,
+      value: repositories.total_count,
       color: 'text-blue-500'
     },
     {
       icon: Star,
       label: 'Community Impact',
-      value: (repositories?.stats?.total_stars || 0).toLocaleString(),
+      value: repositories.stats.total_stars.toLocaleString(),
       color: 'text-yellow-500'
     },
     {
       icon: GitFork,
       label: 'Network Reach',
-      value: (repositories?.stats?.total_forks || 0).toLocaleString(),
+      value: repositories.stats.total_forks.toLocaleString(),
       color: 'text-purple-500'
     },
     {
@@ -279,15 +252,15 @@ const ResultsPage = () => {
               <div className="flex flex-wrap gap-4 text-sm">
                 <span className="flex items-center gap-1">
                   <Users className="w-4 h-4 text-blue-400" />
-                  <span className="text-gray-300">{user?.followers || 0} followers</span>
+                  <span className="text-gray-300">{user.followers} followers</span>
                 </span>
                 <span className="flex items-center gap-1">
                   <Package className="w-4 h-4 text-green-400" />
-                  <span className="text-gray-300">{repositories?.total_count || 0} repos</span>
+                  <span className="text-gray-300">{repositories.total_count} repos</span>
                 </span>
                 <span className="flex items-center gap-1">
                   <Star className="w-4 h-4 text-yellow-400" />
-                  <span className="text-gray-300">{repositories?.stats?.total_stars || 0} stars</span>
+                  <span className="text-gray-300">{repositories.stats.total_stars} stars</span>
                 </span>
               </div>
             </div>
@@ -355,40 +328,6 @@ const ResultsPage = () => {
             </div>
           </motion.div>
         )}
-
-        {/* Data Visualization Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8"
-        >
-          {/* Language Distribution Chart */}
-          <LanguageDistributionChart languages={languages} />
-          
-          {/* Personality Radar Chart */}
-          <PersonalityRadarChart personality={personality} />
-        </motion.div>
-
-        {/* Repository Highlights */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className="mb-8"
-        >
-          <RepoHighlights repositories={repositories} limit={3} />
-        </motion.div>
-
-        {/* Career Match Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.5 }}
-          className="mb-8"
-        >
-          <CareerMatch personality={personality} />
-        </motion.div>
 
         {/* Data Verification */}
         <motion.div

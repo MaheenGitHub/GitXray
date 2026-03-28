@@ -18,7 +18,10 @@ import {
   Calendar,
   Lightbulb,
   Shield,
-  Rocket
+  Rocket,
+  Package,
+  GitFork,
+  Code2
 } from 'lucide-react';
 import { getBehavioralAnalysis, getRoastAnalysis, analyzeGitHubUser } from '../services/api';
 import toast from 'react-hot-toast';
@@ -80,7 +83,19 @@ const ResultsPageV2 = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        console.log('Starting analysis for username:', username);
+        console.log('🔍 MAKING API CALL FOR USERNAME:', username);
+        const result = await analyzeGitHubUser(username);
+        
+        // DEBUG: Log the actual data received
+        console.log('🔍 FRONTEND RECEIVED DATA:');
+        console.log('Full Result:', JSON.stringify(result, null, 2));
+        console.log('User Data:', result.user);
+        console.log('User Followers:', result.user?.followers);
+        console.log('Repository Stats:', result.repositories?.stats);
+        console.log('Analysis Data:', result.analysis);
+        console.log('Stats Object:', result.stats);
+        
+        setData(result);
         
         // Start with basic analysis first - it's more reliable
         let basicData;
@@ -89,40 +104,9 @@ const ResultsPageV2 = () => {
           console.log('Basic analysis successful:', basicData);
         } catch (apiError) {
           console.error('API call failed:', apiError);
-          // Use mock data for testing if API fails
-          basicData = {
-            success: true,
-            data: {
-              user: {
-                username: username,
-                name: 'Test User',
-                bio: 'Test bio',
-                location: 'Test location',
-                followers: 5,
-                following: 7,
-                avatar_url: 'https://avatars.githubusercontent.com/u/146413921?v=4'
-              },
-              personality: {
-                dominant_personality: {
-                  type: 'builder',
-                  name: 'Builder',
-                  title: 'The Architect',
-                  description: 'Consistent developers who build structured, reliable projects',
-                  traits: ['Creates many repositories', 'Consistent commit patterns'],
-                  score: 78
-                },
-                insights: {
-                  strengths: ['Consistent project delivery', 'Strong architectural skills'],
-                  recommendations: ['Focus on documentation', 'Consider mentoring']
-                }
-              },
-              repositories: {
-                total_count: 26,
-                stats: { total_stars: 31, total_forks: 0 }
-              }
-            }
-          };
-          console.log('Using mock data:', basicData);
+          toast.error('Failed to fetch GitHub data. Please try again.');
+          navigate('/');
+          return;
         }
         
         console.log('🔍 Basic data type:', typeof basicData);
@@ -211,19 +195,7 @@ const ResultsPageV2 = () => {
           evolution_timeline: enhancedData?.evolution_timeline || generateFallbackTimeline(actualData)
         };
         
-        const finalRoastData = roastData || {
-          roasts: [{
-            message: "You're doing great! Keep up the good work!",
-            reason: "Positive encouragement"
-          }],
-          stats: {
-            repo_count: actualData.repositories?.total_count || 0,
-            stars: actualData.repositories?.stats?.total_stars || 0,
-            forks: actualData.repositories?.stats?.total_forks || 0,
-            avg_stars: actualData.repositories?.total_count > 0 ? 
-              Math.floor((actualData.repositories?.stats?.total_stars || 0) / actualData.repositories.total_count) : 0
-          }
-        };
+        const finalRoastData = roastData;
         
         console.log('🎯 Setting data:', { analysis: analysisData, roast: finalRoastData, stats: actualData.user });
         
@@ -277,7 +249,13 @@ const ResultsPageV2 = () => {
     );
   }
 
-  const { analysis, stats } = data;
+  const { analysis, user, repositories, languages, personality } = data;
+  const stats = {
+    repo_count: repositories?.total_count || 0,
+    stars: repositories?.stats?.total_stars || 0,
+    forks: repositories?.stats?.total_forks || 0,
+    languages_count: Object.keys(languages || {}).length
+  };
   const insights = analysis?.behavioral_insights || {};
   const evolutionTimeline = analysis?.evolution_timeline || [];
 
@@ -393,6 +371,58 @@ const ResultsPageV2 = () => {
           </div>
         </div>
       </section>
+
+      {/* STATS SECTION - Real GitHub Data */}
+      <motion.section
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        className="px-4 mb-12"
+      >
+        <div className="max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              {
+                icon: Package,
+                label: 'Project Portfolio',
+                value: stats?.repo_count || 0,
+                color: 'text-blue-500'
+              },
+              {
+                icon: Star,
+                label: 'Community Impact',
+                value: (stats?.stars || 0).toLocaleString(),
+                color: 'text-yellow-500'
+              },
+              {
+                icon: GitFork,
+                label: 'Network Reach',
+                value: (stats?.forks || 0).toLocaleString(),
+                color: 'text-purple-500'
+              },
+              {
+                icon: Code2,
+                label: 'Tech Diversity',
+                value: Object.keys(analysis?.languages || {}).length,
+                color: 'text-green-500'
+              }
+            ].map((stat, index) => (
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 + index * 0.1, duration: 0.4 }}
+                whileHover={{ y: -2 }}
+                className="glass-morphism rounded-xl p-6 text-center"
+              >
+                <stat.icon className={`w-8 h-8 ${stat.color} mx-auto mb-3`} />
+                <div className="text-2xl font-bold text-white mb-1">{stat.value}</div>
+                <div className="text-gray-400 text-sm">{stat.label}</div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </motion.section>
 
       {/* TABS - Above Core Insight */}
       <motion.section

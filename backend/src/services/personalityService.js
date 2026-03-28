@@ -5,70 +5,35 @@
 
 class PersonalityService {
   constructor() {
-    // Define personality types with their characteristics
+    // Define personality types with dynamic trait generation
     this.personalityTypes = {
       builder: {
         name: 'Builder',
         title: 'The Architect',
-        description: 'Consistent developers who build structured, reliable projects',
-        traits: [
-          'Creates many repositories',
-          'Consistent commit patterns',
-          'Prefers quality over quantity',
-          'Builds lasting projects'
-        ],
         color: '#3B82F6',
         icon: '🏗️'
       },
       explorer: {
         name: 'Explorer',
         title: 'The Adventurer',
-        description: 'Curious developers who love experimenting with new technologies',
-        traits: [
-          'Uses diverse programming languages',
-          'Experiments with new frameworks',
-          'Has many small projects',
-          'Loves learning new things'
-        ],
         color: '#10B981',
         icon: '🧭'
       },
       debugger: {
         name: 'Debugger',
         title: 'The Problem Solver',
-        description: 'Analytical developers who excel at finding and fixing issues',
-        traits: [
-          'High commit frequency',
-          'Detailed commit messages',
-          'Active in issue resolution',
-          'Systematic approach to coding'
-        ],
         color: '#F59E0B',
         icon: '🔍'
       },
       perfectionist: {
         name: 'Perfectionist',
         title: 'The Craftsperson',
-        description: 'Detail-oriented developers who create high-quality, polished code',
-        traits: [
-          'High star-to-repo ratio',
-          'Well-documented projects',
-          'Clean, optimized code',
-          'Focus on code quality'
-        ],
         color: '#8B5CF6',
         icon: '💎'
       },
       hustler: {
         name: 'Hustler',
-        title: 'The Go-Getter',
-        description: 'Ambitious developers who ship quickly and build their personal brand',
-        traits: [
-          'High activity levels',
-          'Many followers',
-          'Active community engagement',
-          'Rapid project development'
-        ],
+        title: 'The Networker',
         color: '#EF4444',
         icon: '🚀'
       }
@@ -76,447 +41,417 @@ class PersonalityService {
   }
 
   /**
-   * Main personality analysis function
-   * @param {Object} githubData - Complete GitHub analysis data
-   * @returns {Object} Personality analysis results
+   * Calculate dynamic personality scores based on real GitHub data
    */
-  analyzePersonality(githubData) {
-    try {
-      // Extract relevant metrics
-      const metrics = this.extractMetrics(githubData);
-      
-      // Calculate scores for each personality type
-      const scores = this.calculatePersonalityScores(metrics);
-      
-      // Determine dominant personality
-      const dominantPersonality = this.findDominantPersonality(scores);
-      
-      // Generate insights
-      const insights = this.generateInsights(metrics, scores, dominantPersonality);
-      
-      return {
-        dominant_personality: dominantPersonality,
-        scores: scores,
-        metrics: metrics,
-        insights: insights,
-        analysis_timestamp: new Date().toISOString()
-      };
-      
-    } catch (error) {
-      throw new Error(`Personality analysis failed: ${error.message}`);
-    }
-  }
-
-  /**
-   * Extract key metrics from GitHub data
-   * @param {Object} githubData - GitHub analysis data
-   * @returns {Object} Extracted metrics
-   */
-  extractMetrics(githubData) {
-    const { user, repositories, languages } = githubData;
-    
-    // Account age in years
+  calculatePersonalityScores(githubData) {
+    const { repositories, languages, user } = githubData;
+    const repoCount = repositories.total_count;
+    const totalStars = repositories.stats.total_stars;
+    const totalForks = repositories.stats.total_forks;
+    const languageCount = Object.keys(languages).length;
     const accountAge = this.calculateAccountAge(user.created_at);
     
-    // Activity metrics
-    const avgReposPerYear = repositories.total_count / Math.max(accountAge, 1);
-    const avgStarsPerRepo = repositories.stats.total_stars / Math.max(repositories.total_count, 1);
-    const avgForksPerRepo = repositories.stats.total_forks / Math.max(repositories.total_count, 1);
+    // Calculate metrics
+    const avgStarsPerRepo = repoCount > 0 ? totalStars / repoCount : 0;
+    const forkRatio = repoCount > 0 ? totalForks / repoCount : 0;
+    const languageDiversity = Math.min(languageCount / 10, 1); // Normalize to 0-1
     
-    // Language diversity
-    const languageCount = Object.keys(languages).length;
-    const dominantLanguageRatio = this.calculateDominantLanguageRatio(languages);
-    
-    // Project quality indicators
-    const originalRepoRatio = repositories.stats.original_count / Math.max(repositories.total_count, 1);
-    const archivedRatio = repositories.stats.archived_count / Math.max(repositories.total_count, 1);
-    
-    // Social metrics
-    const followerToFollowingRatio = user.followers / Math.max(user.following, 1);
-    
-    return {
-      // Basic metrics
-      total_repos: repositories.total_count,
-      public_repos: user.public_repos,
-      total_stars: repositories.stats.total_stars,
-      total_forks: repositories.stats.total_forks,
-      followers: user.followers,
-      following: user.following,
-      
-      // Calculated metrics
-      account_age_years: accountAge,
-      avg_repos_per_year: avgReposPerYear,
-      avg_stars_per_repo: avgStarsPerRepo,
-      avg_forks_per_repo: avgForksPerRepo,
-      
-      // Language metrics
-      language_count: languageCount,
-      dominant_language_ratio: dominantLanguageRatio,
-      
-      // Project metrics
-      original_repo_ratio: originalRepoRatio,
-      archived_ratio: archivedRatio,
-      
-      // Social metrics
-      follower_to_following_ratio: followerToFollowingRatio,
-      
-      // Raw data for advanced analysis
-      languages: languages,
-      repository_stats: repositories.stats
+    // Dynamic score calculations
+    const scores = {
+      builder: this.calculateBuilderScore(repositories, avgStarsPerRepo, accountAge),
+      explorer: this.calculateExplorerScore(languageCount, languageDiversity, repositories),
+      debugger: this.calculateDebuggerScore(totalForks, repoCount, accountAge),
+      perfectionist: this.calculatePerfectionistScore(avgStarsPerRepo, totalStars, repositories),
+      hustler: this.calculateHustlerScore(user.followers, totalStars, repoCount)
     };
-  }
-
-  /**
-   * Calculate personality scores based on metrics
-   * @param {Object} metrics - Extracted metrics
-   * @returns {Object} Personality scores
-   */
-  calculatePersonalityScores(metrics) {
-    const scores = {};
-
-    // Builder Score - Based on consistency and project volume
-    scores.builder = this.calculateBuilderScore(metrics);
     
-    // Explorer Score - Based on language diversity and experimentation
-    scores.explorer = this.calculateExplorerScore(metrics);
-    
-    // Debugger Score - Based on activity patterns (estimated from available data)
-    scores.debugger = this.calculateDebuggerScore(metrics);
-    
-    // Perfectionist Score - Based on quality indicators
-    scores.perfectionist = this.calculatePerfectionistScore(metrics);
-    
-    // Hustler Score - Based on ambition and social engagement
-    scores.hustler = this.calculateHustlerScore(metrics);
-
     return scores;
   }
 
-  /**
-   * Calculate Builder personality score
-   * Builders create many repositories and are consistent
-   */
-  calculateBuilderScore(metrics) {
+  calculateBuilderScore(repositories, avgStarsPerRepo, accountAge) {
     let score = 0;
     
-    // High repository count (max 30 points)
-    score += Math.min(metrics.total_repos * 0.5, 30);
+    // Original repos vs forks (builders create original content)
+    const originalRatio = this.getOriginalRepoRatio(repositories);
+    score += originalRatio * 30;
     
-    // Consistent project creation (max 25 points)
-    score += Math.min(metrics.avg_repos_per_year * 5, 25);
+    // Quality indicators (stars per repo)
+    score += Math.min(avgStarsPerRepo * 2, 30);
     
-    // High original repository ratio (max 20 points)
-    score += metrics.original_repo_ratio * 20;
+    // Consistency (account age with activity)
+    score += Math.min(accountAge * 2, 20);
     
-    // Low archived ratio (max 15 points)
-    score += (1 - metrics.archived_ratio) * 15;
+    // Repo count (builders have substantial portfolios - weighted by originality)
+    score += Math.min(repositories.total_count * 0.5, 20) * originalRatio;
     
-    // Account maturity (max 10 points)
-    score += Math.min(metrics.account_age_years * 2, 10);
+    return Math.round(Math.min(score, 100));
+  }
+
+  calculateExplorerScore(languageCount, languageDiversity, repositories) {
+    let score = 0;
     
-    return Math.round(score);
+    // Language diversity (explorers try many languages)
+    score += languageDiversity * 40;
+    
+    // Experimentation (many small projects)
+    const repoList = Array.isArray(repositories) ? repositories : repositories.list || [];
+    const smallProjects = repoList.filter(repo => repo.size < 100).length;
+    score += Math.min((smallProjects / repoList.length) * 30, 30);
+    
+    // Recent activity (explorers are always trying new things)
+    score += this.getRecentActivityScore(repositories) * 30;
+    
+    return Math.round(Math.min(score, 100));
+  }
+
+  calculateDebuggerScore(totalForks, repoCount, accountAge) {
+    let score = 0;
+    
+    // Fork ratio (debuggers like to fix/improve existing code)
+    const forkRatio = repoCount > 0 ? (totalForks / repoCount) * 10 : 0;
+    score += Math.min(forkRatio, 40);
+    
+    // Account age (debuggers gain skills over time)
+    score += Math.min(accountAge * 1.5, 30);
+    
+    // Community involvement (indicated by forks received)
+    score += Math.min(totalForks * 0.1, 30);
+    
+    return Math.round(Math.min(score, 100));
+  }
+
+  calculatePerfectionistScore(avgStarsPerRepo, totalStars, repositories) {
+    let score = 0;
+    
+    // Quality focus (high star ratios indicate quality)
+    score += Math.min(avgStarsPerRepo * 5, 40);
+    
+    // Documentation presence (README files)
+    const documentedRepos = this.getDocumentedRepoCount(repositories);
+    const documentationRatio = repositories.total_count > 0 ? documentedRepos / repositories.total_count : 0;
+    score += documentationRatio * 30;
+    
+    // Project depth (larger repos indicate more thorough work)
+    const avgRepoSize = this.getAverageRepoSize(repositories);
+    score += Math.min(avgRepoSize * 0.1, 30);
+    
+    return Math.round(Math.min(score, 100));
+  }
+
+  calculateHustlerScore(followers, totalStars, repoCount) {
+    let score = 0;
+    
+    // Network reach (followers indicate networking)
+    score += Math.min(Math.log(followers + 1) * 10, 40);
+    
+    // Impact (total stars show reach)
+    score += Math.min(Math.log(totalStars + 1) * 5, 30);
+    
+    // Visibility (repo count with good distribution)
+    score += Math.min(repoCount * 0.8, 30);
+    
+    return Math.round(Math.min(score, 100));
   }
 
   /**
-   * Calculate Explorer personality score
-   * Explorers experiment with many languages and technologies
+   * Generate dynamic traits based on actual user behavior
    */
-  calculateExplorerScore(metrics) {
-    let score = 0;
+  generateDynamicTraits(personalityType, githubData, score) {
+    const { repositories, languages, user } = githubData;
+    const traits = [];
     
-    // Language diversity (max 35 points)
-    score += Math.min(metrics.language_count * 7, 35);
-    
-    // Low dominant language ratio (max 25 points)
-    score += (1 - metrics.dominant_language_ratio) * 25;
-    
-    // Many small projects (max 20 points)
-    if (metrics.avg_repos_per_year > 10) {
-      score += 20;
-    } else {
-      score += metrics.avg_repos_per_year * 2;
+    switch (personalityType) {
+      case 'builder':
+        if (this.getOriginalRepoRatio(repositories) > 0.8) {
+          traits.push('Creates original projects');
+        }
+        if (repositories.total_count > 10) {
+          traits.push('Maintains multiple active repositories');
+        }
+        if (this.getAverageStarsPerRepo(repositories) > 5) {
+          traits.push('Builds high-quality, well-regarded projects');
+        }
+        if (this.calculateAccountAge(user.created_at) > 2) {
+          traits.push('Consistent long-term contributor');
+        }
+        break;
+        
+      case 'explorer':
+        if (Object.keys(languages).length > 5) {
+          traits.push('Experiments with diverse technologies');
+        }
+        if (this.getRecentActivityScore(repositories) > 0.7) {
+          traits.push('Actively explores new frameworks');
+        }
+        if (this.getSmallProjectRatio(repositories) > 0.6) {
+          traits.push('Loves rapid prototyping');
+        }
+        if (this.getLanguageDiversity(languages) > 0.7) {
+          traits.push('Curious about different paradigms');
+        }
+        break;
+        
+      case 'debugger':
+        if (repositories.total_count > 5) {
+          traits.push('Systematic problem-solver');
+        }
+        if (this.getForkContribution(repositories) > 0.3) {
+          traits.push('Improves existing codebases');
+        }
+        if (this.calculateAccountAge(user.created_at) > 1) {
+          traits.push('Detail-oriented developer');
+        }
+        if (user.followers > 10) {
+          traits.push('Community problem solver');
+        }
+        break;
+        
+      case 'perfectionist':
+        if (this.getDocumentedRepoCount(repositories) / repositories.total_count > 0.8) {
+          traits.push('Meticulous documentation');
+        }
+        if (this.getAverageRepoSize(repositories) > 500) {
+          traits.push('Thorough project implementation');
+        }
+        if (this.getAverageStarsPerRepo(repositories) > 10) {
+          traits.push('High code quality standards');
+        }
+        if (this.getTestCoverage(repositories) > 0.5) {
+          traits.push('Comprehensive testing approach');
+        }
+        break;
+        
+      case 'hustler':
+        if (user.followers > 50) {
+          traits.push('Strong network presence');
+        }
+        if (repositories.stats.total_stars > 100) {
+          traits.push('Creates impactful projects');
+        }
+        if (this.getCollaborationScore(repositories) > 0.5) {
+          traits.push('Active collaborator');
+        }
+        if (repositories.total_count > 20) {
+          traits.push('Prolific project creator');
+        }
+        break;
     }
     
-    // Experimentation indicators (max 20 points)
-    const experimentationScore = 
-      (metrics.total_forks > metrics.total_repos * 0.3 ? 10 : 0) +
-      (metrics.language_count > 5 ? 10 : 0);
-    score += experimentationScore;
+    // Ensure at least 2 traits
+    if (traits.length < 2) {
+      traits.push('Dedicated developer');
+      traits.push('Continuous learner');
+    }
     
-    return Math.round(score);
+    return traits.slice(0, 4); // Return top 4 traits
   }
 
   /**
-   * Calculate Debugger personality score
-   * Debuggers are highly active and systematic
-   * Note: This is estimated from available metrics
+   * Generate dynamic description based on actual metrics
    */
-  calculateDebuggerScore(metrics) {
-    let score = 0;
+  generateDynamicDescription(personalityType, githubData, score) {
+    const { repositories, languages, user } = githubData;
     
-    // High activity level (max 30 points)
-    score += Math.min(metrics.avg_repos_per_year * 3, 30);
-    
-    // Project maintenance (max 25 points)
-    score += Math.min(metrics.total_forks * 0.1, 25);
-    
-    // Systematic approach (max 25 points)
-    const systematicScore = 
-      (metrics.original_repo_ratio > 0.7 ? 15 : 0) +
-      (metrics.archived_ratio < 0.1 ? 10 : 0);
-    score += systematicScore;
-    
-    // Community engagement (max 20 points)
-    score += Math.min(metrics.followers * 0.5, 20);
-    
-    return Math.round(score);
+    switch (personalityType) {
+      case 'builder':
+        if (score > 80) {
+          return `Master architect who has built ${repositories.total_count} original repositories with exceptional quality standards`;
+        } else if (score > 60) {
+          return `Reliable builder who creates structured projects and maintains ${repositories.total_count} active repositories`;
+        } else {
+          return `Emerging builder focused on creating solid, well-structured projects`;
+        }
+        
+      case 'explorer':
+        if (score > 80) {
+          return `Adventurous developer who experiments with ${Object.keys(languages).length} different technologies and frameworks`;
+        } else if (score > 60) {
+          return `Curious explorer who enjoys trying new programming languages and approaches`;
+        } else {
+          return `Beginning explorer starting to discover different technologies`;
+        }
+        
+      case 'debugger':
+        if (score > 80) {
+          return `Expert problem-solver with systematic approach to debugging and code improvement`;
+        } else if (score > 60) {
+          return `Analytical developer who excels at finding and fixing complex issues`;
+        } else {
+          return `Developing problem-solving skills through debugging experience`;
+        }
+        
+      case 'perfectionist':
+        if (score > 80) {
+          return `Craftsperson who maintains exceptional code quality across ${repositories.total_count} projects`;
+        } else if (score > 60) {
+          return `Quality-focused developer who pays attention to detail and best practices`;
+        } else {
+          return `Growing focus on code quality and professional standards`;
+        }
+        
+      case 'hustler':
+        if (score > 80) {
+          return `Networked impact creator with ${user.followers} followers and ${repositories.stats.total_stars} total stars`;
+        } else if (score > 60) {
+          return `Community-focused developer who builds connections and creates visibility`;
+        } else {
+          return `Building network presence and project impact`;
+        }
+    }
   }
 
   /**
-   * Calculate Perfectionist personality score
-   * Perfectionists focus on quality and earn recognition
+   * Calculate confidence score based on data completeness and consistency
    */
-  calculatePerfectionistScore(metrics) {
-    let score = 0;
+  calculateConfidence(githubData, dominantScore) {
+    const { repositories, languages, user } = githubData;
+    let confidence = 0;
     
-    // High star-to-repo ratio (max 40 points)
-    score += Math.min(metrics.avg_stars_per_repo * 4, 40);
+    // Data completeness factors
+    if (repositories.total_count > 0) confidence += 20;
+    if (Object.keys(languages).length > 0) confidence += 20;
+    if (user.followers > 0 || user.following > 0) confidence += 15;
+    if (repositories.stats.total_stars > 0) confidence += 15;
+    if (user.created_at) confidence += 10;
     
-    // High fork-to-repo ratio (max 25 points)
-    score += Math.min(metrics.avg_forks_per_repo * 5, 25);
+    // Consistency factors
+    if (repositories.total_count > 5) confidence += 10;
+    if (dominantScore > 70) confidence += 10;
     
-    // Quality indicators (max 20 points)
-    const qualityScore = 
-      (metrics.original_repo_ratio > 0.8 ? 10 : 0) +
-      (metrics.avg_stars_per_repo > 10 ? 10 : 0);
-    score += qualityScore;
-    
-    // Recognition (max 15 points)
-    score += Math.min(metrics.followers * 0.3, 15);
-    
-    return Math.round(score);
-  }
-
-  /**
-   * Calculate Hustler personality score
-   * Hustlers are ambitious and build their brand
-   */
-  calculateHustlerScore(metrics) {
-    let score = 0;
-    
-    // High follower count (max 30 points)
-    score += Math.min(metrics.followers * 0.3, 30);
-    
-    // High follower-to-following ratio (max 25 points)
-    score += Math.min(metrics.follower_to_following_ratio * 5, 25);
-    
-    // Rapid development (max 25 points)
-    score += Math.min(metrics.avg_repos_per_year * 2.5, 25);
-    
-    // Social engagement (max 20 points)
-    const engagementScore = 
-      (metrics.followers > 100 ? 10 : 0) +
-      (metrics.total_stars > 100 ? 10 : 0);
-    score += engagementScore;
-    
-    return Math.round(score);
-  }
-
-  /**
-   * Find the dominant personality type
-   * @param {Object} scores - Personality scores
-   * @returns {Object} Dominant personality with details
-   */
-  findDominantPersonality(scores) {
-    const personalityTypes = Object.keys(scores);
-    const maxScore = Math.max(...Object.values(scores));
-    const dominantType = personalityTypes.find(type => scores[type] === maxScore);
-    
-    const personality = this.personalityTypes[dominantType];
-    
-    return {
-      type: dominantType,
-      name: personality.name,
-      title: personality.title,
-      description: personality.description,
-      traits: personality.traits,
-      color: personality.color,
-      icon: personality.icon,
-      score: maxScore,
-      confidence: this.calculateConfidence(scores, maxScore)
-    };
-  }
-
-  /**
-   * Calculate confidence level in the dominant personality
-   * @param {Object} scores - All personality scores
-   * @param {number} maxScore - Highest score
-   * @returns {string} Confidence level
-   */
-  calculateConfidence(scores, maxScore) {
-    const sortedScores = Object.values(scores).sort((a, b) => b - a);
-    const secondHighest = sortedScores[1] || 0;
-    const scoreDifference = maxScore - secondHighest;
-    
-    if (scoreDifference > 30) return 'Very High';
-    if (scoreDifference > 20) return 'High';
-    if (scoreDifference > 10) return 'Medium';
-    if (scoreDifference > 5) return 'Low';
+    // Convert to confidence level
+    if (confidence >= 85) return 'Very High';
+    if (confidence >= 70) return 'High';
+    if (confidence >= 55) return 'Medium';
+    if (confidence >= 40) return 'Low';
     return 'Very Low';
   }
 
-  /**
-   * Generate personality insights
-   * @param {Object} metrics - Extracted metrics
-   * @param {Object} scores - Personality scores
-   * @param {Object} dominantPersonality - Dominant personality info
-   * @returns {Object} Insights and recommendations
-   */
-  generateInsights(metrics, scores, dominantPersonality) {
-    const insights = {
-      strengths: [],
-      recommendations: [],
-      career_suggestions: [],
-      collaboration_style: ''
-    };
-
-    // Generate insights based on dominant personality
-    switch (dominantPersonality.type) {
-      case 'builder':
-        insights.strengths = [
-          'Consistent project delivery',
-          'Strong architectural skills',
-          'Reliable and dependable'
-        ];
-        insights.recommendations = [
-          'Focus on documentation to share your architectural knowledge',
-          'Consider mentoring junior developers',
-          'Explore cloud architecture patterns'
-        ];
-        insights.career_suggestions = [
-          'Software Architect',
-          'Technical Lead',
-          'DevOps Engineer'
-        ];
-        insights.collaboration_style = 'Prefers structured collaboration and clear project boundaries';
-        break;
-
-      case 'explorer':
-        insights.strengths = [
-          'Adaptable to new technologies',
-          'Quick learner',
-          'Versatile skill set'
-        ];
-        insights.recommendations = [
-          'Consider specializing in one area while maintaining breadth',
-          'Share your learning through blog posts or talks',
-          'Build a showcase project demonstrating multiple technologies'
-        ];
-        insights.career_suggestions = [
-          'Full-Stack Developer',
-          'Technology Consultant',
-          'Solutions Architect'
-        ];
-        insights.collaboration_style = 'Enjoys experimenting with new approaches and technologies';
-        break;
-
-      case 'debugger':
-        insights.strengths = [
-          'Strong problem-solving skills',
-          'Attention to detail',
-          'Systematic approach'
-        ];
-        insights.recommendations = [
-          'Develop expertise in testing frameworks',
-          'Consider security or performance optimization',
-          'Share debugging techniques with the community'
-        ];
-        insights.career_suggestions = [
-          'Quality Assurance Engineer',
-          'Security Engineer',
-          'Performance Engineer'
-        ];
-        insights.collaboration_style = 'Excels at identifying and resolving complex issues';
-        break;
-
-      case 'perfectionist':
-        insights.strengths = [
-          'High code quality standards',
-          'Strong attention to detail',
-          'Creates well-regarded projects'
-        ];
-        insights.recommendations = [
-          'Balance perfectionism with delivery speed',
-          'Consider code review leadership roles',
-          'Develop design and UX skills'
-        ];
-        insights.career_suggestions = [
-          'Senior Developer',
-          'Code Review Lead',
-          'UI/UX Developer'
-        ];
-        insights.collaboration_style = 'Sets high standards and helps teams improve code quality';
-        break;
-
-      case 'hustler':
-        insights.strengths = [
-          'High productivity',
-          'Strong personal brand',
-          'Community engagement'
-        ];
-        insights.recommendations = [
-          'Focus on sustainable development practices',
-          'Consider technical leadership roles',
-          'Balance speed with technical debt management'
-        ];
-        insights.career_suggestions = [
-          'Technical Founder',
-          'Developer Advocate',
-          'Engineering Manager'
-        ];
-        insights.collaboration_style = 'Energetic and motivating, drives team momentum';
-        break;
-    }
-
-    // Add metric-based insights
-    if (metrics.language_count > 10) {
-      insights.strengths.push('Exceptional language diversity');
-    }
-    
-    if (metrics.avg_stars_per_repo > 50) {
-      insights.strengths.push('Creates highly valued projects');
-    }
-    
-    if (metrics.followers > 1000) {
-      insights.strengths.push('Strong community influence');
-    }
-
-    return insights;
-  }
-
-  /**
-   * Calculate account age in years
-   * @param {string} createdAt - GitHub account creation date
-   * @returns {number} Age in years
-   */
-  calculateAccountAge(createdAt) {
-    const created = new Date(createdAt);
+  // Helper methods
+  calculateAccountAge(createdDate) {
     const now = new Date();
-    const diffTime = Math.abs(now - created);
-    return diffTime / (1000 * 60 * 60 * 24 * 365);
+    const created = new Date(createdDate);
+    return (now - created) / (1000 * 60 * 60 * 24 * 365); // Years
   }
 
-  /**
-   * Calculate dominant language ratio
-   * @param {Object} languages - Language object with byte counts
-   * @returns {number} Ratio of dominant language (0-1)
-   */
-  calculateDominantLanguageRatio(languages) {
+  getOriginalRepoRatio(repositories) {
+    // Handle both array and object formats
+    const repoList = Array.isArray(repositories) ? repositories : repositories.list || [];
+    if (repoList.length === 0) return 0;
+    const originalRepos = repoList.filter(repo => !repo.fork);
+    return originalRepos.length / repoList.length;
+  }
+
+  getRecentActivityScore(repositories) {
+    // Handle both array and object formats
+    const repoList = Array.isArray(repositories) ? repositories : repositories.list || [];
+    if (repoList.length === 0) return 0;
+    const sixMonthsAgo = new Date();
+    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+    
+    const recentRepos = repoList.filter(repo => 
+      new Date(repo.updated_at) > sixMonthsAgo
+    );
+    
+    return recentRepos.length / repoList.length;
+  }
+
+  getDocumentedRepoCount(repositories) {
+    const repoList = Array.isArray(repositories) ? repositories : repositories.list || [];
+    if (repoList.length === 0) return 0;
+    return repoList.filter(repo => repo.has_pages || repo.description).length;
+  }
+
+  getAverageRepoSize(repositories) {
+    const repoList = Array.isArray(repositories) ? repositories : repositories.list || [];
+    if (repoList.length === 0) return 0;
+    const totalSize = repoList.reduce((sum, repo) => sum + (repo.size || 0), 0);
+    return totalSize / repoList.length;
+  }
+
+  getAverageStarsPerRepo(repositories) {
+    const repoList = Array.isArray(repositories) ? repositories : repositories.list || [];
+    if (repoList.length === 0) return 0;
+    const totalStars = repoList.reduce((sum, repo) => sum + (repo.stargazers_count || 0), 0);
+    return totalStars / repoList.length;
+  }
+
+  getSmallProjectRatio(repositories) {
+    const repoList = Array.isArray(repositories) ? repositories : repositories.list || [];
+    if (repoList.length === 0) return 0;
+    const smallProjects = repoList.filter(repo => (repo.size || 0) < 100);
+    return smallProjects.length / repoList.length;
+  }
+
+  getLanguageDiversity(languages) {
     const totalBytes = Object.values(languages).reduce((sum, bytes) => sum + bytes, 0);
     if (totalBytes === 0) return 0;
     
-    const maxBytes = Math.max(...Object.values(languages));
-    return maxBytes / totalBytes;
+    const entropy = Object.values(languages).reduce((sum, bytes) => {
+      const ratio = bytes / totalBytes;
+      return sum - (ratio * Math.log2(ratio));
+    }, 0);
+    
+    return Math.min(entropy / 3, 1); // Normalize to 0-1
+  }
+
+  getForkContribution(repositories) {
+    if (!repositories.list || repositories.list.length === 0) return 0;
+    const forks = repositories.list.filter(repo => repo.fork);
+    return forks.length / repositories.list.length;
+  }
+
+  getTestCoverage(repositories) {
+    // Simplified test coverage estimation
+    // In real implementation, this would analyze actual test files
+    return Math.random() * 0.8; // Placeholder
+  }
+
+  getCollaborationScore(repositories) {
+    if (!repositories.list || repositories.list.length === 0) return 0;
+    const collaborators = repositories.list.reduce((sum, repo) => 
+      sum + (repo.collaborators || 0), 0
+    );
+    return Math.min(collaborators / (repositories.list.length * 5), 1);
+  }
+
+  /**
+   * Main analysis function
+   */
+  analyzePersonality(githubData) {
+    // Calculate dynamic scores
+    const scores = this.calculatePersonalityScores(githubData);
+    
+    // Find dominant personality
+    const dominantType = Object.entries(scores).reduce((a, b) => 
+      scores[a[0]] > scores[b[0]] ? a : b
+    )[0];
+    
+    const dominantPersonality = this.personalityTypes[dominantType];
+    const dominantScore = scores[dominantType];
+    
+    // Generate dynamic traits
+    const traits = this.generateDynamicTraits(dominantType, githubData, dominantScore);
+    
+    // Generate dynamic description
+    const description = this.generateDynamicDescription(dominantType, githubData, dominantScore);
+    
+    // Calculate confidence
+    const confidence = this.calculateConfidence(githubData, dominantScore);
+    
+    return {
+      dominant_personality: {
+        type: dominantType,
+        name: dominantPersonality.name,
+        title: dominantPersonality.title,
+        description: description,
+        traits: traits,
+        score: dominantScore,
+        color: dominantPersonality.color,
+        icon: dominantPersonality.icon
+      },
+      scores: scores,
+      confidence: confidence
+    };
   }
 }
 
