@@ -5,6 +5,8 @@
 
 const personalityService = require('./personalityService');
 const behavioralAnalyzer = require('./behavioralAnalyzer');
+const evolutionAnalyzer = require('./evolutionAnalyzer');
+const githubService = require('./githubService');
 const logger = require('../utils/logger');
 
 /**
@@ -32,12 +34,25 @@ async function analyzeWithPersonality(githubData) {
       perfectionist_score: personalityAnalysis.scores.perfectionist || 0,
       hustler_score: personalityAnalysis.scores.hustler || 0
     });
+
+    // Generate evolution timeline
+    const repositories = await githubService.getUserRepositories(githubData.user.username);
+    
+    const evolutionTimeline = evolutionAnalyzer.analyze({
+      repositories: repositories || [],
+      account_creation_date: githubData.user.created_at,
+      languages: githubData.languages,
+      repo_count: githubData.repositories.total_count,
+      stars: githubData.repositories.stats.total_stars,
+      forks: githubData.repositories.stats.total_forks
+    });
     
     // Combine with GitHub data
     const enhancedAnalysis = {
       ...githubData,
       personality: personalityAnalysis,
       behavioral_insights: behavioralInsights,
+      evolution_timeline: evolutionTimeline,
       analysis_type: 'comprehensive'
     };
     

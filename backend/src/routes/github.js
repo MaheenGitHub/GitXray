@@ -295,6 +295,7 @@ router.get('/behavioral/:username',
         data: {
           user: githubAnalysis.user,
           behavioral_insights: behavioralInsights,
+          evolution_timeline: personalityAnalysis.evolution_timeline,
           analysis_timestamp: new Date().toISOString()
         },
         message: `Behavioral analysis completed for: ${username}`,
