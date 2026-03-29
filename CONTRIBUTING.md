@@ -500,6 +500,98 @@ I use custom labels to organize contributions effectively. When creating issues 
 
 ---
 
+## 📜 Code of Conduct
+
+### Our Pledge
+
+In the interest of fostering an open and welcoming environment, we as contributors and maintainers pledge to make participation in our project and our community a harassment-free experience for everyone, regardless of age, body size, disability, ethnicity, gender identity and expression, level of experience, nationality, personal appearance, race, religion, or sexual identity and orientation.
+
+### Our Standards
+
+**Positive Behavior:**
+- Using welcoming and inclusive language
+- Being respectful of differing viewpoints and experiences
+- Gracefully accepting constructive criticism
+- Focusing on what is best for the community
+- Showing empathy towards other community members
+- Providing help and guidance to newcomers
+- Celebrating contributions and achievements
+
+**Unacceptable Behavior:**
+- The use of sexualized language or imagery
+- Trolling, insulting/derogatory comments, or personal attacks
+- Public or private harassment
+- Publishing others' private information without explicit permission
+- Submitting malicious code or intentionally breaking the project
+- Sarcasm that could be misinterpreted as hostile
+- Discriminatory jokes or remarks
+- Dismissing valid concerns or feedback
+
+### Project-Specific Guidelines
+
+**🧬 Personality Analysis Discussions:**
+- Be respectful when discussing personality types and traits
+- Avoid making definitive judgments about developers based on their patterns
+- Remember that GitXray provides insights, not definitive psychological evaluations
+- Be mindful of privacy when discussing real GitHub profiles
+
+**🔥 Roast Engine Content:**
+- Keep roasts insightful and constructive, never mean-spirited
+- Avoid personal attacks or harmful stereotypes
+- Ensure roast content remains professional and educational
+- Report any roast patterns that cross the line into harassment
+
+**📊 Data Ethics:**
+- Respect user privacy and data protection
+- Don't share personal GitHub data without consent
+- Be transparent about the limitations of behavioral analysis
+- Avoid making assumptions about developers' abilities or worth
+
+### Enforcement
+
+**Reporting Incidents:**
+If you experience or witness unacceptable behavior, please report it through:
+- **GitHub Issues**: Create a private issue by contacting maintainers directly
+- **Email**: Send a message to the project maintainers
+- **Discussions**: Use the "Code of Conduct" tag for public concerns
+
+**Response Process:**
+1. **Immediate Response**: We will respond within 48 hours
+2. **Investigation**: We will investigate the incident thoroughly
+3. **Action**: We will take appropriate action based on severity
+4. **Follow-up**: We will ensure the issue is fully resolved
+
+**Consequences:**
+- **Warning**: For minor first-time offenses
+- **Temporary Suspension**: For repeated or more serious offenses
+- **Permanent Ban**: For severe violations or repeated offenses after warnings
+- **Removal of Content**: Removing inappropriate contributions
+
+### Maintainer Responsibilities
+
+**Our Commitment:**
+- Enforce this Code of Conduct fairly and consistently
+- Lead by example in inclusive behavior
+- Respond promptly to conduct reports
+- Provide clear explanations for enforcement actions
+- Protect the privacy of those reporting incidents
+
+**Conflict Resolution:**
+- We will mediate disputes constructively
+- We will consider all perspectives before taking action
+- We will document our decisions for transparency
+- We will appeal to the community for complex cases
+
+### Attribution
+
+This Code of Conduct is adapted from the [Contributor Covenant](https://www.contributor-covenant.org), version 2.1, available at https://www.contributor-covenant.org/version/2/1/code_of_conduct.html.
+
+Community Impact Guidelines were inspired by [Mozilla's code of conduct enforcement ladder](https://github.com/mozilla/diversity).
+
+For answers to common questions about this code of conduct, see https://www.contributor-covenant.org/faq. Translations are available at https://www.contributor-covenant.org/translations.
+
+---
+
 ## 📜 License
 
 By contributing, you agree that your contributions will be licensed under the MIT License.
