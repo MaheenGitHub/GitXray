@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { ArrowLeft, Github, Brain, Star, GitFork, Users, Package, Code2, Share2, Download, FileText, Image, ChevronDown } from 'lucide-react'
+import { ArrowLeft, Github, Brain, Star, GitFork, Users, Package, Code2, Share2, Download, FileText, Image, ChevronDown, X, Linkedin, Twitter, MessageCircle } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { analyzeGitHubUser } from '../services/api'
 import LanguageDistributionChart from '../components/charts/LanguageDistributionChart'
@@ -20,6 +20,7 @@ const ResultsPage = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [showExportDropdown, setShowExportDropdown] = useState(false)
+  const [showShareModal, setShowShareModal] = useState(false)
   const dashboardRef = useRef(null)
   
   console.log('🔍 ResultsPage state initialized:', { username, loading, error, data });
@@ -59,28 +60,27 @@ const ResultsPage = () => {
     }
   }, [username])
 
-  const handleShare = async () => {
-    if (!data || !data.user || !data.personality) {
-      toast.error('Data not loaded yet');
-      return;
+  const handleShare = () => {
+    setShowShareModal(true)
+  }
+
+  const handleCopyLink = () => {
+    const shareUrl = `${window.location.origin}/results/${username}`
+    navigator.clipboard.writeText(shareUrl)
+    toast.success('Link copied to clipboard!')
+  }
+
+  const handleSocialShare = (platform, message) => {
+    const shareUrl = `${window.location.origin}/results/${username}`
+    const fullMessage = `${message} ${shareUrl}`
+    
+    const urls = {
+      linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}&summary=${encodeURIComponent(fullMessage)}`,
+      twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(fullMessage)}`,
+      whatsapp: `https://wa.me/?text=${encodeURIComponent(fullMessage)}`
     }
     
-    const shareData = {
-      title: `GitXray - ${data.user.name || username}`,
-      text: `I'm a ${data.personality.dominant_personality?.name || 'developer'}! Discover your developer personality type.`,
-      url: window.location.href
-    }
-
-    try {
-      if (navigator.share) {
-        await navigator.share(shareData)
-      } else {
-        await navigator.clipboard.writeText(window.location.href)
-        toast.success('Link copied to clipboard!')
-      }
-    } catch (err) {
-      toast.error('Failed to share')
-    }
+    window.open(urls[platform], '_blank')
   }
 
   const handleDownload = () => {
@@ -313,6 +313,14 @@ const ResultsPage = () => {
             <span>Back to Home</span>
           </button>
           
+          {/* Share Button */}
+          <button
+            onClick={handleShare}
+            className="p-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors duration-200"
+          >
+            <Share2 className="w-4 h-4" />
+          </button>
+          
           {/* Export Dropdown */}
           <div className="relative">
             <button
@@ -531,6 +539,98 @@ const ResultsPage = () => {
         </motion.div>
         </div>
       </div>
+      
+      {/* Share Modal */}
+      {showShareModal && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          onClick={() => setShowShareModal(false)}
+        >
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            className="bg-gray-800 rounded-2xl p-8 max-w-md w-full border border-gray-700 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-bold text-white">Share Your Developer DNA</h3>
+              <button
+                onClick={() => setShowShareModal(false)}
+                className="text-gray-400 hover:text-white transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            <div className="flex items-center gap-4 mb-6 p-4 bg-gray-700/50 rounded-lg">
+              {data?.user?.avatar_url ? (
+                <img 
+                  src={data.user.avatar_url} 
+                  alt={data.user.username}
+                  className="w-16 h-16 rounded-full"
+                />
+              ) : null}
+              <div>
+                <div className="text-lg font-semibold text-white mb-1">
+                  {data?.user?.username}
+                </div>
+                <div className="text-sm text-blue-400">
+                  Developer DNA: {data?.personality?.dominant_personality?.title}
+                </div>
+              </div>
+            </div>
+
+            <div className="mb-6">
+              <label className="block text-sm text-gray-400 mb-2">Share Link</label>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={`${window.location.origin}/results/${username}`}
+                  readOnly
+                  className="flex-1 bg-gray-700 text-white px-4 py-2 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none"
+                />
+                <button
+                  onClick={handleCopyLink}
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+                >
+                  Copy Link
+                </button>
+              </div>
+            </div>
+
+            <div className="mb-4">
+              <div className="text-sm text-gray-400 mb-3">Share on Social Media</div>
+              <div className="flex gap-3 justify-center">
+                <button
+                  onClick={() => handleSocialShare('linkedin', 'Check out my Developer DNA report on GitXray! 🧭')}
+                  className="flex flex-col items-center gap-2 p-3 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors"
+                >
+                  <Linkedin className="w-6 h-6 text-blue-400" />
+                  <span className="text-white text-sm">LinkedIn</span>
+                </button>
+                <button
+                  onClick={() => handleSocialShare('twitter', 'Check out my Developer DNA report on GitXray! 🧭')}
+                  className="flex flex-col items-center gap-2 p-3 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors"
+                >
+                  <Twitter className="w-6 h-6 text-sky-400" />
+                  <span className="text-white text-sm">Twitter/X</span>
+                </button>
+                <button
+                  onClick={() => handleSocialShare('whatsapp', 'Check out my Developer DNA report on GitXray! 🧭')}
+                  className="flex flex-col items-center gap-2 p-3 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors"
+                >
+                  <MessageCircle className="w-6 h-6 text-green-400" />
+                  <span className="text-white text-sm">WhatsApp</span>
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
     </div>
   )
 }
