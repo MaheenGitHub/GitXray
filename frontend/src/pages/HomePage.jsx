@@ -1,13 +1,14 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Search, Github, Sparkles, Brain, Code2, Zap, Rocket, Shield } from 'lucide-react'
+import { Search, Github, Sparkles, Brain, Code2, Zap, Rocket, Shield, Info, X, Linkedin, Users } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 const HomePage = () => {
   const [username, setUsername] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [useV2, setUseV2] = useState(false) // Default to Classic experience
+  const [showArchitectModal, setShowArchitectModal] = useState(false)
   const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
@@ -46,7 +47,26 @@ const HomePage = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4">
+    <div className="min-h-screen flex items-center justify-center px-4 relative">
+      {/* Header with Architect Profile Info */}
+      <div className="absolute top-4 right-4 z-40">
+        <motion.button
+          onClick={() => setShowArchitectModal(true)}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          animate={{ 
+            boxShadow: ["0 0 0 0 rgba(16, 185, 129, 0)", "0 0 0 8px rgba(16, 185, 129, 0)"],
+          }}
+          transition={{ 
+            boxShadow: { duration: 2, repeat: Infinity },
+          }}
+          className="flex items-center gap-2 p-3 text-emerald-400 bg-emerald-500/10 rounded-full border border-emerald-500/30 transition-all duration-200 backdrop-blur-sm"
+          title="Architect Profile"
+        >
+          <Info className="w-4 h-4" />
+        </motion.button>
+      </div>
+      
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -254,6 +274,94 @@ const HomePage = () => {
           </div>
         </motion.div>
       </motion.div>
+      
+      {/* Architect Profile Modal */}
+      {showArchitectModal && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/50 backdrop-blur-md z-50 flex items-center justify-center p-4"
+          onClick={() => setShowArchitectModal(false)}
+        >
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="bg-gradient-to-br from-gray-900/90 to-emerald-900/90 rounded-2xl border border-emerald-500/30 backdrop-blur-xl p-8 max-w-md w-full shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="text-center mb-6">
+              <h2 className="text-2xl font-bold text-white mb-2">Maheen Fatima</h2>
+              <p className="text-emerald-400 font-medium">Project Creator | BSIT @ PUCIT (Batch 2022)</p>
+            </div>
+
+            {/* Professional Bio */}
+            <div className="mb-8">
+              <p className="text-gray-300 leading-relaxed text-sm">
+                Final-year BSIT student at PUCIT with a focus on Machine Learning and Full-Stack Development. I enjoy building data-driven tools and exploring the intersection of AI and Cybersecurity.
+              </p>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="grid grid-cols-2 gap-3 mb-6">
+              <a
+                href="https://www.linkedin.com/in/maheenfatimaa"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 px-4 py-3 bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/30 rounded-lg transition-all duration-200 hover:scale-105"
+              >
+                <Linkedin className="w-4 h-4" />
+                <span className="text-sm font-medium">LinkedIn</span>
+              </a>
+              <a
+                href="https://maheen-ai.hashnode.dev"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 px-4 py-3 bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/30 rounded-lg transition-all duration-200 hover:scale-105"
+              >
+                <Brain className="w-4 h-4" />
+                <span className="text-sm font-medium">AI Lab Blog</span>
+              </a>
+              <a
+                href="https://maheen-hacking-diary.hashnode.dev"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 px-4 py-3 bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/30 rounded-lg transition-all duration-200 hover:scale-105"
+              >
+                <Code2 className="w-4 h-4" />
+                <span className="text-sm font-medium">Hacking Diary</span>
+              </a>
+              <a
+                href="https://www.upwork.com/freelancers/~017a150168182cf524"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 px-4 py-3 bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/30 rounded-lg transition-all duration-200 hover:scale-105"
+              >
+                <Users className="w-4 h-4" />
+                <span className="text-sm font-medium">Upwork</span>
+              </a>
+            </div>
+
+            {/* Signature Branding */}
+            <div className="text-center pt-4 border-t border-emerald-500/20">
+              <p className="text-emerald-400 text-sm italic font-medium">
+                "Code is poetry — every line tells a story."
+              </p>
+            </div>
+
+            {/* Close Button */}
+            <button
+              onClick={() => setShowArchitectModal(false)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
+            >
+              <X className="w-6 h-6" />
+            </button>
+          </motion.div>
+        </motion.div>
+      )}
     </div>
   )
 }
