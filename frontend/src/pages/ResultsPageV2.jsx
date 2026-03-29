@@ -497,8 +497,8 @@ const ResultsPageV2 = () => {
               <div className={`p-8 bg-gradient-to-br from-${currentMode.color}-500/10 to-purple-500/10 rounded-2xl border border-${currentMode.color}-400/20 backdrop-blur-sm`}>
                 <Lightbulb className={`w-8 h-8 text-${currentMode.color}-400 mx-auto mb-4`} />
                 <p className="text-lg md:text-xl text-gray-200 leading-relaxed">
-                  {mode === 'professional' && "You're a consistent builder who values structure and reliability in your projects."}
-                  {mode === 'fun' && "Debugging at 3 AM is officially called a \"creative session.\""}
+                  {mode === 'professional' && "Focused on building, learning, and improving with each step forward."}
+                  {mode === 'fun' && "Somewhere between planning everything and just going with the flow… and it works."}
                   {mode === 'roast' && "Wo (Profile) dekhny mn kaisi seedhi saadhi lagti 😂 Hai bolti k wo toh Kuch nahi samjhti"}
                 </p>
               </div>
@@ -618,7 +618,7 @@ const ResultsPageV2 = () => {
                     </div>
                     <p className="text-gray-200 leading-relaxed">
                       {mode === 'professional' && "Based on your repository patterns, you demonstrate strong architectural thinking and systematic approach to development."}
-                      {mode === 'fun' && "Your coding adventures suggest you collect programming languages like Pokemon cards!"}
+                      {mode === 'fun' && "Somewhere between planning everything and just going with the flow… and it works."}
                       {mode === 'roast' && "Your commit history looks like a roller coaster of motivation and procrastination."}
                     </p>
                   </div>

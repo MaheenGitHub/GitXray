@@ -9,6 +9,35 @@
 
 ---
 
+## What is GitXray?
+
+**GitXray** is not just a GitHub analyzer.
+
+It's a **Developer Behavior Intelligence System** that:
+
+- Understands how you code  
+- Detects your real development patterns  
+- Reveals strengths, blind spots & habits  
+- Even roasts you (accurately)
+
+---
+
+## Why GitXray is Different
+
+Most tools:
+```javascript
+GitHub → Stats → Done
+```
+
+**GitXray:**
+```javascript
+GitHub → Behavior → Personality → Truth → Growth
+```
+
+It tells you things you didn't even realize about yourself.
+
+---
+
 ## The "Developer DNA" Concept
 
 GitXray transforms GitHub activity patterns into actionable personality insights using a sophisticated analysis engine. The system evaluates developers across five core personality types, each with distinct characteristics:
@@ -31,34 +60,76 @@ The analysis leverages GitHub REST API data including:
 
 ## Core Features
 
-### � Real-time GitHub Profile Analysis
+### Real-time GitHub Profile Analysis
 - Instantaneous data fetching via GitHub REST API
 - Comprehensive repository and contribution metrics
 - Language distribution and technology stack analysis
 
-### 🧬 Dynamic "Developer DNA" Reporting
+### Dynamic "Developer DNA" Reporting
 - Personality-specific accent colors (e.g., Emerald for The Adventurer)
 - Behavioral insights based on actual coding patterns
 - Evolution timeline showing developer growth trajectory
 - Confidence scoring for personality trait assessment
 
-### 📊 Advanced Data Visualization
+### Advanced Data Visualization
 - Interactive charts for language distribution
 - Repository highlights and impact metrics
 - Career matching based on technical strengths
 - Animated timeline with milestone tracking
 
-### 🔄 Comprehensive Sharing System
+### Comprehensive Sharing System
 - Custom-branded modal interface
 - Dynamic URL generation using `window.location.origin`
 - Social media integration (LinkedIn, Twitter, WhatsApp)
 - Clipboard functionality for seamless sharing
 
-### 💾 Data Export Capabilities
+### Data Export Capabilities
 - Instant JSON report generation with complete analysis
 - Portable data format for integration with other tools
 - Timestamped analysis for tracking progress over time
 - Structured output with personality insights and metrics
+
+### Truth Insights (Signature Feature)
+Real, sharp observations like:
+
+> "You start more projects than you finish."
+
+> "You prefer building alone over collaborating."
+
+### Roast Mode
+Savage but data-driven:
+
+- Overachiever roast  
+- Lone wolf roast  
+- One-hit wonder roast  
+- Underappreciated dev roast  
+
+Highly shareable.
+
+---
+
+## Tech Stack
+
+### Frontend
+| Technology | Purpose | Version |
+|------------|---------|---------|
+| **React** | UI Framework | 18.2.0 |
+| **Vite** | Build Tool | 4.5.14 |
+| **Tailwind CSS** | Styling | 3.2.7 |
+| **Framer Motion** | Animations | 10.18.0 |
+| **React Router** | Navigation | 6.8.1 |
+| **Chart.js** | Data Visualization | 4.2.1 |
+| **Axios** | HTTP Client | 1.3.4 |
+
+### Backend
+| Technology | Purpose | Version |
+|------------|---------|---------|
+| **Node.js** | Runtime Environment | 16+ |
+| **Express** | Web Framework | 4.18.2 |
+| **GitHub REST API** | Data Source | v4 |
+| **Winston** | Logging | 3.8.2 |
+| **Helmet** | Security | 6.0.1 |
+| **CORS** | Cross-Origin Resource Sharing | 2.8.5 |
 
 ---
 
@@ -200,3 +271,14 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - GitHub REST API for providing comprehensive developer data
 - React community for exceptional UI libraries
 - Open source contributors who make developer tools possible
+
+---
+
+## Author
+
+**Maheen Fatima**
+[@MaheenGitHub](https://github.com/MaheenGitHub)
+
+---
+
+ Built with logic, curiosity, and a little bit of chaos.
