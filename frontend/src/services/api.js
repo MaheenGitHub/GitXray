@@ -88,8 +88,26 @@ export const analyzeGitHubUser = async (username) => {
     console.error('❌ Error message:', error.message);
     console.error('❌ Error code:', error.code);
     
-    // Re-throw the error so it can be caught by the component
-    throw new Error(error.response?.data?.message || 'Failed to analyze user')
+    // Enhanced error handling with friendly messages
+    if (error.response?.status === 404) {
+      toast.error(`User "${username}" not found on GitHub. Please check the username and try again.`);
+    } else if (error.response?.status === 403) {
+      toast.error('GitHub API rate limit exceeded. Please wait a moment and try again.');
+    } else if (error.response?.status === 422) {
+      toast.error('Invalid username format. Please use a valid GitHub username.');
+    } else if (error.code === 'NETWORK_ERROR') {
+      toast.error('Unable to connect to GitHub. Please check your internet connection and try again.');
+    } else if (error.code === 'ECONNABORTED') {
+      toast.error('Request was cancelled. Please try again.');
+    } else {
+      const friendlyMessage = error.response?.data?.message || 
+        error.response?.data?.error || 
+        'Unable to analyze GitHub user. Please try again later.';
+      toast.error(friendlyMessage);
+    }
+    
+    // Re-throw error so it can be caught by component
+    throw new Error(error.response?.data?.message || error.response?.data?.error || 'Failed to analyze user')
   }
 }
 
@@ -103,6 +121,13 @@ export const getUserProfile = async (username) => {
     const response = await api.get(`/user/${username}`)
     return response.data
   } catch (error) {
+    if (error.response?.status === 404) {
+      toast.error(`User "${username}" not found on GitHub. Please check the username and try again.`);
+    } else if (error.response?.status === 403) {
+      toast.error('GitHub API rate limit exceeded. Please wait a moment and try again.');
+    } else {
+      toast.error('Unable to fetch user profile. Please try again later.');
+    }
     throw new Error(error.response?.data?.message || 'Failed to fetch user profile')
   }
 }
@@ -118,6 +143,13 @@ export const getUserRepositories = async (username, options = {}) => {
     const response = await api.get(`/repositories/${username}`, { params: options })
     return response.data
   } catch (error) {
+    if (error.response?.status === 404) {
+      toast.error(`User "${username}" not found on GitHub. Please check the username and try again.`);
+    } else if (error.response?.status === 403) {
+      toast.error('GitHub API rate limit exceeded. Please wait a moment and try again.');
+    } else {
+      toast.error('Unable to fetch repositories. Please try again later.');
+    }
     throw new Error(error.response?.data?.message || 'Failed to fetch repositories')
   }
 }
@@ -131,6 +163,7 @@ export const getPersonalityTypes = async () => {
     const response = await api.get('/personality/types')
     return response.data
   } catch (error) {
+    toast.error('Unable to fetch personality types. Please try again later.');
     throw new Error(error.response?.data?.message || 'Failed to fetch personality types')
   }
 }
@@ -145,6 +178,7 @@ export const getPersonalityType = async (type) => {
     const response = await api.get(`/personality/types/${type}`)
     return response.data
   } catch (error) {
+    toast.error('Unable to fetch personality type. Please try again later.');
     throw new Error(error.response?.data?.message || 'Failed to fetch personality type')
   }
 }
@@ -159,6 +193,13 @@ export const getBehavioralAnalysis = async (username) => {
     const response = await api.get(`/behavioral/${username}`)
     return response.data
   } catch (error) {
+    if (error.response?.status === 404) {
+      toast.error(`User "${username}" not found on GitHub. Please check the username and try again.`);
+    } else if (error.response?.status === 403) {
+      toast.error('GitHub API rate limit exceeded. Please wait a moment and try again.');
+    } else {
+      toast.error('Unable to analyze behavior. Please try again later.');
+    }
     throw new Error(error.response?.data?.message || 'Failed to analyze behavior')
   }
 }
@@ -173,6 +214,13 @@ export const getRoastAnalysis = async (username) => {
     const response = await api.get(`/roast/${username}`)
     return response.data
   } catch (error) {
+    if (error.response?.status === 404) {
+      toast.error(`User "${username}" not found on GitHub. Please check the username and try again.`);
+    } else if (error.response?.status === 403) {
+      toast.error('GitHub API rate limit exceeded. Please wait a moment and try again.');
+    } else {
+      toast.error('Unable to generate roasts. Please try again later.');
+    }
     throw new Error(error.response?.data?.message || 'Failed to generate roasts')
   }
 }
@@ -186,6 +234,7 @@ export const checkApiHealth = async () => {
     const response = await api.get('/health')
     return response.data
   } catch (error) {
+    toast.error('Unable to check API health. Please try again later.');
     throw new Error(error.response?.data?.message || 'API health check failed')
   }
 }

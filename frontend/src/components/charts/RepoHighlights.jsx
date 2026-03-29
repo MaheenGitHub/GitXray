@@ -41,7 +41,7 @@ const RepoHighlights = ({ repositories, username, limit = 3 }) => {
     return (
       <div className="glass-morphism rounded-xl p-6">
         <div className="flex items-center justify-center gap-2 mb-4">
-          <FolderOpen className="w-5 h-5 text-blue-400" />
+          <span className="text-blue-400 font-bold">📁</span>
           <h3 className="text-lg font-semibold text-white">Repository Highlights</h3>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -64,15 +64,12 @@ const RepoHighlights = ({ repositories, username, limit = 3 }) => {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-2">
                       <span className="text-2xl">{project.icon}</span>
-                      <h4 className="text-white font-medium text-sm group-hover:text-blue-400 transition-colors">
+                      <h4 className="text-white font-medium text-sm group-hover:text-blue-400 transition-colors" style={{ lineHeight: '1.4', paddingBottom: '6px', marginTop: '2px', position: 'relative', zIndex: 10 }}>
                         {project.name}
                       </h4>
                     </div>
-                    <p className="text-gray-400 text-xs overflow-hidden text-overflow-ellipsis" 
+                    <p className="text-gray-400 text-xs leading-relaxed overflow-wrap break-word" 
                        style={{ 
-                         display: '-webkit-box',
-                         WebkitLineClamp: 3,
-                         WebkitBoxOrient: 'vertical',
                          flexGrow: 1
                        }}>
                       {project.description}
@@ -86,20 +83,20 @@ const RepoHighlights = ({ repositories, username, limit = 3 }) => {
                     className="ml-2 p-1.5 text-gray-400 hover:text-white hover:bg-gray-700/50 rounded-lg transition-all duration-200 flex-shrink-0"
                     title="View on GitHub"
                   >
-                    <Github className="w-4 h-4" />
+                    <span className="font-bold text-sm">🔗</span>
                   </a>
                 </div>
 
                 {/* Push content to bottom */}
                 <div className="mt-auto">
                   {/* Project Stats */}
-                  <div className="flex items-center gap-3 text-xs mb-3">
-                    <div className="flex items-center gap-1 text-yellow-400">
-                      <Star className="w-3 h-3" />
+                  <div className="flex items-center gap-4 text-xs mb-3">
+                    <div className="flex items-center gap-2 text-yellow-400">
+                      <span className="font-bold">⭐</span>
                       <span>{project.stars}</span>
                     </div>
-                    <div className="flex items-center gap-1 text-blue-400">
-                      <Package className="w-3 h-3" />
+                    <div className="flex items-center gap-2 text-blue-400">
+                      <span className="font-bold">📦</span>
                       <span>{(project.size / 1024).toFixed(1)} KB</span>
                     </div>
                   </div>
@@ -154,9 +151,9 @@ const RepoHighlights = ({ repositories, username, limit = 3 }) => {
   return (
     <div className="glass-morphism rounded-xl p-6">
       <div className="flex items-center justify-center gap-2 mb-4">
-        <FolderOpen className="w-5 h-5 text-blue-400" />
-        <h3 className="text-lg font-semibold text-white">Repository Highlights</h3>
-      </div>
+      <span className="text-blue-400 font-bold">📁</span>
+      <h3 className="text-lg font-semibold text-white">Repository Highlights</h3>
+    </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {topRepos.map((repo, index) => (
           <div
@@ -175,15 +172,12 @@ const RepoHighlights = ({ repositories, username, limit = 3 }) => {
               {/* Repository Header */}
               <div className="flex items-start justify-between mb-3">
                 <div className="flex-1 min-w-0">
-                  <h4 className="text-white font-medium text-sm truncate group-hover:text-blue-400 transition-colors">
-                    {repo.name}
-                  </h4>
+                  <h4 className="text-white font-medium text-sm group-hover:text-blue-400 transition-colors" style={{ lineHeight: '1.4', paddingBottom: '6px', marginTop: '2px', position: 'relative', zIndex: 10 }}>
+                        {repo.name}
+                      </h4>
                   {repo.description && (
-                    <p className="text-gray-400 text-xs mt-1 overflow-hidden text-overflow-ellipsis" 
+                    <p className="text-gray-400 text-xs mt-1 leading-relaxed overflow-wrap break-word" 
                        style={{ 
-                         display: '-webkit-box',
-                         WebkitLineClamp: 3,
-                         WebkitBoxOrient: 'vertical',
                          flexGrow: 1
                        }}>
                       {repo.description}
@@ -197,24 +191,24 @@ const RepoHighlights = ({ repositories, username, limit = 3 }) => {
                   className="ml-2 p-1 text-gray-400 hover:text-white transition-colors flex-shrink-0"
                   title="View on GitHub"
                 >
-                  <ExternalLink className="w-4 h-4" />
+                  <span className="font-bold text-sm">🔗</span>
                 </a>
               </div>
 
               {/* Push content to bottom */}
               <div className="mt-auto">
                 {/* Repository Stats */}
-                <div className="flex items-center gap-3 text-xs mb-3">
-                  <div className="flex items-center gap-1 text-yellow-400">
-                    <Star className="w-3 h-3" />
+                <div className="flex items-center gap-4 text-xs mb-3">
+                  <div className="flex items-center gap-2 text-yellow-400">
+                    <span className="font-bold">⭐</span>
                     <span>{repo.stargazers_count || 0}</span>
                   </div>
-                  <div className="flex items-center gap-1 text-purple-400">
-                    <GitFork className="w-3 h-3" />
+                  <div className="flex items-center gap-2 text-purple-400">
+                    <span className="font-bold">🍴</span>
                     <span>{repo.forks_count || 0}</span>
                   </div>
-                  <div className="flex items-center gap-1 text-blue-400">
-                    <Package className="w-3 h-3" />
+                  <div className="flex items-center gap-2 text-blue-400">
+                    <span className="font-bold">📦</span>
                     <span>{formatSize(repo.size || 0)}</span>
                   </div>
                 </div>

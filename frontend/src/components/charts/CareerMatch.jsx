@@ -184,7 +184,7 @@ const CareerMatch = ({ personality, languages }) => {
             <div
               key={index}
               className="relative group flex flex-col"
-              style={{ height: '100%' }}
+              style={{ minHeight: '280px' }}
             >
               {/* Glow effect on hover with purple accent */}
               <div className="absolute -inset-1 bg-gradient-to-r from-purple-500/20 to-teal-500/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm" />
@@ -194,12 +194,12 @@ const CareerMatch = ({ personality, languages }) => {
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-2">
-                      <Icon className="w-5 h-5 text-blue-400" />
-                      <h4 className="text-white font-medium text-sm group-hover:text-blue-400 transition-colors">
+                      <Icon className="w-5 h-5 text-blue-400 flex-shrink-0" />
+                      <h4 className="text-white font-medium text-sm group-hover:text-blue-400 transition-colors overflow-wrap break-word">
                         {career.title}
                       </h4>
                     </div>
-                    <p className="text-gray-400 text-xs line-clamp-2">
+                    <p className="text-gray-400 text-xs leading-relaxed overflow-wrap break-word" style={{ lineHeight: '1.5', overflowWrap: 'break-word' }}>
                       {career.description}
                     </p>
                   </div>

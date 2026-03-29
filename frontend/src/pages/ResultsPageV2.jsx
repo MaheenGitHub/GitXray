@@ -331,7 +331,14 @@ const ResultsPageV2 = () => {
   const currentMode = modes[mode];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 text-white overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 text-white overflow-hidden relative">
+      {/* Watermark - Lower z-index to prevent content overlap */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
+        <div className="text-gray-500/5 text-xs font-mono tracking-widest transform rotate-[-15deg]">
+          GitXray Intelligence Engine v2.0
+        </div>
+      </div>
+      
       {/* Header with Architect Profile Info */}
       <div className="absolute top-4 right-4 z-40">
         <motion.button

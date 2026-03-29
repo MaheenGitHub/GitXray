@@ -136,21 +136,22 @@ const LanguageDistributionChart = ({ languages }) => {
       </div>
       
       {/* Custom 2-Column Legend */}
-      <div className="mt-4">
+      <div className="mt-6 mb-4">
         <div 
-          className="grid gap-2.5 text-xs"
+          className="grid gap-3 text-xs"
           style={{ 
             gridTemplateColumns: 'repeat(2, 1fr)',
-            color: '#9CA3AF'
+            color: '#9CA3AF',
+            padding: '10px 0 15px 0'
           }}
         >
           {legendItems.map((item, index) => (
-            <div key={index} className="flex items-center gap-2">
+            <div key={index} className="flex items-center gap-3" style={{ paddingLeft: '4px' }}>
               <div 
                 className="w-3 h-3 rounded-sm flex-shrink-0"
                 style={{ backgroundColor: item.color }}
               />
-              <span className="truncate" style={{ fontSize: '0.85rem' }}>
+              <span className="truncate" style={{ fontSize: '0.9rem', lineHeight: '1.4', marginLeft: '4px' }}>
                 {item.label}
               </span>
             </div>
