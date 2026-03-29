@@ -1,13 +1,15 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { ArrowLeft, Github, Brain, Star, GitFork, Users, Package, Code2, Share2, Download } from 'lucide-react'
+import { ArrowLeft, Github, Brain, Star, GitFork, Users, Package, Code2, Share2, Download, FileText, Image, ChevronDown } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { analyzeGitHubUser } from '../services/api'
 import LanguageDistributionChart from '../components/charts/LanguageDistributionChart'
 import PersonalityRadarChart from '../components/charts/PersonalityRadarChart'
 import RepoHighlights from '../components/charts/RepoHighlights'
 import CareerMatch from '../components/charts/CareerMatch'
+import jsPDF from 'jspdf'
+import html2canvas from 'html2canvas'
 
 const ResultsPage = () => {
   console.log('🔍 ResultsPage component initializing...');
@@ -17,6 +19,8 @@ const ResultsPage = () => {
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [showExportDropdown, setShowExportDropdown] = useState(false)
+  const dashboardRef = useRef(null)
   
   console.log('🔍 ResultsPage state initialized:', { username, loading, error, data });
 
@@ -90,17 +94,89 @@ const ResultsPage = () => {
       personality: data.personality,
       analysis_date: new Date().toISOString(),
       fetch_timestamp: data.fetch_timestamp,
-      cache_bust: data.cache_bust
+      cache_bust: data.cache_bust,
     }
     
+    const filename = `${username}-gitxray.json`
     const blob = new Blob([JSON.stringify(reportData, null, 2)], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `${username}-dev-dna-report.json`
-    a.click()
+    const link = document.createElement('a')
+    link.href = url
+    link.download = filename
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
     URL.revokeObjectURL(url)
-    toast.success('Report downloaded!')
+    
+    toast.success('Report downloaded successfully!')
+  }
+
+  const handlePDFExport = async () => {
+    if (!dashboardRef.current) {
+      toast.error('Dashboard not ready for export')
+      return;
+    }
+
+    try {
+      toast.loading('Generating PDF...')
+      
+      // Capture the dashboard area (excluding the back button)
+      const element = dashboardRef.current
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        backgroundColor: '#1f2937'
+      })
+      
+      const imgData = canvas.toDataURL('image/png')
+      const pdf = new jsPDF('p', 'mm', 'a4')
+      const imgWidth = pdf.internal.pageSize.getWidth()
+      const imgHeight = (canvas.height * imgWidth) / canvas.width
+      
+      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight)
+      pdf.save(`${username}-gitxray.pdf`)
+      
+      toast.success('PDF exported successfully!')
+    } catch (error) {
+      console.error('PDF export error:', error)
+      toast.error('Failed to export PDF')
+    }
+  }
+
+  const handleImageExport = async () => {
+    if (!dashboardRef.current) {
+      toast.error('Dashboard not ready for export')
+      return;
+    }
+
+    try {
+      toast.loading('Generating image...')
+      
+      const element = dashboardRef.current
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        backgroundColor: '#1f2937'
+      })
+      
+      canvas.toBlob((blob) => {
+        const url = URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = url
+        link.download = `${username}-gitxray.png`
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        URL.revokeObjectURL(url)
+        
+        toast.success('Image exported successfully!')
+      }, 'image/png')
+    } catch (error) {
+      console.error('Image export error:', error)
+      toast.error('Failed to export image')
+    }
   }
 
   if (loading) {
@@ -237,23 +313,46 @@ const ResultsPage = () => {
             <span>Back to Home</span>
           </button>
           
-          <div className="flex items-center gap-3">
+          {/* Export Dropdown */}
+          <div className="relative">
             <button
-              onClick={handleShare}
-              className="p-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors duration-200"
-              title="Share Analysis"
+              onClick={() => setShowExportDropdown(!showExportDropdown)}
+              className="flex items-center gap-2 p-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors duration-200"
             >
-              <Share2 className="w-5 h-5" />
+              <Download className="w-4 h-4" />
+              <ChevronDown className="w-3 h-3" />
             </button>
-            <button
-              onClick={handleDownload}
-              className="p-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors duration-200"
-              title="Download Report"
-            >
-              <Download className="w-5 h-5" />
-            </button>
+            
+            {showExportDropdown && (
+              <div className="absolute right-0 top-full mt-2 w-48 bg-gray-800 rounded-lg shadow-lg border border-gray-700 z-50">
+                <button
+                  onClick={handleDownload}
+                  className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-700 transition-colors"
+                >
+                  <FileText className="w-4 h-4 text-blue-400" />
+                  <span className="text-white">Download JSON</span>
+                </button>
+                <button
+                  onClick={handlePDFExport}
+                  className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-700 transition-colors"
+                >
+                  <FileText className="w-4 h-4 text-red-400" />
+                  <span className="text-white">Download PDF</span>
+                </button>
+                <button
+                  onClick={handleImageExport}
+                  className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-700 transition-colors"
+                >
+                  <Image className="w-4 h-4 text-green-400" />
+                  <span className="text-white">Save as Image</span>
+                </button>
+              </div>
+            )}
           </div>
         </motion.div>
+        
+        {/* Dashboard Content */}
+        <div ref={dashboardRef} className="space-y-8">
 
         {/* User Profile Section */}
         <motion.div
@@ -430,6 +529,7 @@ const ResultsPage = () => {
             </div>
           </div>
         </motion.div>
+        </div>
       </div>
     </div>
   )
