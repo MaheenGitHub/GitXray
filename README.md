@@ -274,6 +274,18 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
+## Contributors
+
+Thanks to all the developers who help make GitXray better!
+
+<!-- contrib.rocks start -->
+<a href="https://contrib.rocks/gh/MaheenGitHub/GitXray">
+  <img src="https://contrib.rocks/image?repo=MaheenGitHub/GitXray" />
+</a>
+<!-- contrib.rocks end -->
+
+---
+
 ## Author
 
 **Maheen Fatima**
