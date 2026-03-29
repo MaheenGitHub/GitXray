@@ -118,7 +118,7 @@ const HomePage = () => {
                 }`}
               >
                 <Shield className="w-4 h-4 inline mr-1" />
-                Classic
+                Quick View
               </button>
               <button
                 onClick={() => setUseV2(true)}
@@ -129,7 +129,7 @@ const HomePage = () => {
                 }`}
               >
                 <Rocket className="w-4 h-4 inline mr-1" />
-                V2 ✨
+                X-Ray Mode
               </button>
             </div>
           </div>

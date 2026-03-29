@@ -40,7 +40,7 @@ const ResultsPageV2 = () => {
     const currentYear = new Date().getFullYear();
     const repoCount = userData.repositories?.total_count || 0;
     const totalStars = userData.repositories?.stats?.total_stars || 0;
-    const avgStars = repoCount > 0 ? totalStars / repoCount : 0;
+    const actualLanguages = Object.keys(userData.languages || {}).length;
     
     return [
       {
@@ -49,8 +49,8 @@ const ResultsPageV2 = () => {
         description: 'Started exploring programming and experimenting with different technologies',
         reason: 'Beginning of development journey',
         repoCount: Math.max(1, Math.floor(repoCount * 0.2)),
-        avgStars: Math.max(0, Math.floor(avgStars * 0.5)),
-        languageCount: Math.max(1, Math.floor(Math.random() * 3) + 1),
+        avgStars: Math.max(0, Math.round((totalStars / repoCount) * 0.5)),
+        languageCount: Math.max(1, Math.floor(actualLanguages * 0.3)),
         confidence: 60,
         color: 'green'
       },
@@ -60,8 +60,8 @@ const ResultsPageV2 = () => {
         description: repoCount > 5 ? 'Began creating more structured and consistent projects' : 'Continued exploring and learning new technologies',
         reason: repoCount > 5 ? 'Developing foundational skills and habits' : 'Building foundational knowledge',
         repoCount: Math.max(1, Math.floor(repoCount * 0.4)),
-        avgStars: Math.max(0, Math.floor(avgStars * 0.7)),
-        languageCount: Math.max(1, Math.floor(Math.random() * 4) + 2),
+        avgStars: Math.max(0, Math.round((totalStars / repoCount) * 0.7)),
+        languageCount: Math.max(1, Math.floor(actualLanguages * 0.6)),
         confidence: 75,
         color: repoCount > 5 ? 'blue' : 'green'
       },
@@ -71,8 +71,8 @@ const ResultsPageV2 = () => {
         description: repoCount > 20 ? 'Currently focusing on high-quality, impactful projects' : repoCount > 10 ? 'Building consistent projects and improving skills' : 'Actively learning and growing as a developer',
         reason: repoCount > 20 ? 'Applying accumulated knowledge and experience' : repoCount > 10 ? 'Developing technical expertise' : 'Continuous learning and improvement',
         repoCount: Math.max(1, Math.floor(repoCount * 0.4)),
-        avgStars: Math.max(0, Math.floor(avgStars * 0.8)),
-        languageCount: Math.max(1, Math.floor(Math.random() * 5) + 2),
+        avgStars: Math.max(0, Math.round((totalStars / repoCount) * 0.8)),
+        languageCount: Math.max(1, actualLanguages),
         confidence: repoCount > 20 ? 85 : repoCount > 10 ? 75 : 65,
         color: repoCount > 20 ? 'purple' : repoCount > 10 ? 'blue' : 'green'
       }
@@ -193,8 +193,6 @@ const ResultsPageV2 = () => {
           }]
         };
         
-        console.log('🎯 Setting data:', { analysis: analysisData, roast: finalRoastData, stats: actualData.user });
-        
         // Combine user data with repositories and languages for the frontend
         const userData = {
           ...actualData.user,
@@ -202,6 +200,8 @@ const ResultsPageV2 = () => {
           languages: actualData.languages,
           personality: actualData.personality
         };
+        
+        console.log('🎯 Setting data:', { analysis: analysisData, roast: finalRoastData, stats: userData });
         
         setData({
           analysis: analysisData,
@@ -498,7 +498,7 @@ const ResultsPageV2 = () => {
                 <Lightbulb className={`w-8 h-8 text-${currentMode.color}-400 mx-auto mb-4`} />
                 <p className="text-lg md:text-xl text-gray-200 leading-relaxed">
                   {mode === 'professional' && "You're a consistent builder who values structure and reliability in your projects."}
-                  {mode === 'fun' && "You're like a magpie - attracted to shiny new technologies and frameworks!"}
+                  {mode === 'fun' && "Debugging at 3 AM is officially called a \"creative session.\""}
                   {mode === 'roast' && "Wo (Profile) dekhny mn kaisi seedhi saadhi lagti 😂 Hai bolti k wo toh Kuch nahi samjhti"}
                 </p>
               </div>
@@ -540,7 +540,7 @@ const ResultsPageV2 = () => {
                       <div className={`p-3 bg-${item.color}-500/10 rounded-lg border border-${item.color}-400/30`}>
                         <div className="font-semibold text-sm">{item.year}</div>
                         <div className="text-xs text-gray-300">{item.role}</div>
-                        <div className="text-xs text-gray-400 mt-1">{item.repoCount} repos • {item.avgStars.toFixed(1)} ⭐ • {item.languageCount} langs</div>
+                        <div className="text-xs text-gray-400 mt-1">{item.repoCount} repos • {item.avgStars} Impact • {item.languageCount} Tech</div>
                       </div>
                     </div>
                     
