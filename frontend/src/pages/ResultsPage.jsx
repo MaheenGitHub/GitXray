@@ -325,7 +325,20 @@ const ResultsPage = () => {
             className="glass-morphism rounded-2xl p-8 mb-8"
           >
             <div className="text-center">
-              <div className="text-6xl mb-4">{personality.dominant_personality.icon}</div>
+              <motion.div 
+                className="text-6xl mb-4 inline-block"
+                animate={{ 
+                  scale: [1, 1.1, 1],
+                  opacity: [1, 0.8, 1]
+                }}
+                transition={{ 
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              >
+                {personality.dominant_personality.icon}
+              </motion.div>
               <h2 className="text-3xl font-bold text-white mb-2">
                 {personality.dominant_personality.title}
               </h2>
@@ -377,7 +390,7 @@ const ResultsPage = () => {
           transition={{ duration: 0.5, delay: 0.4 }}
           className="mb-8"
         >
-          <RepoHighlights repositories={repositories} limit={3} />
+          <RepoHighlights repositories={repositories} username={username} limit={3} />
         </motion.div>
 
         {/* Career Match Section */}
@@ -387,7 +400,7 @@ const ResultsPage = () => {
           transition={{ duration: 0.5, delay: 0.5 }}
           className="mb-8"
         >
-          <CareerMatch personality={personality} />
+          <CareerMatch personality={personality} languages={languages} />
         </motion.div>
 
         {/* Data Verification */}
@@ -413,7 +426,7 @@ const ResultsPage = () => {
             </div>
             <div>
               <div className="text-gray-400 mb-1">Cache Status</div>
-              <div className="text-green-400">Live Data ✅</div>
+              <div className="text-green-400">Live Data</div>
             </div>
           </div>
         </motion.div>

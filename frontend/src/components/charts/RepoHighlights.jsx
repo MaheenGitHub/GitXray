@@ -1,7 +1,7 @@
 import React from 'react';
-import { Star, GitFork, Package, ExternalLink } from 'lucide-react';
+import { Star, GitFork, Package, ExternalLink, Github, FolderOpen } from 'lucide-react';
 
-const RepoHighlights = ({ repositories, limit = 3 }) => {
+const RepoHighlights = ({ repositories, username, limit = 3 }) => {
   // Handle different data structures
   let repoList = [];
   
@@ -40,17 +40,25 @@ const RepoHighlights = ({ repositories, limit = 3 }) => {
 
     return (
       <div className="glass-morphism rounded-xl p-6">
-        <h3 className="text-lg font-semibold text-white mb-4 text-center">Project Highlights</h3>
+        <div className="flex items-center justify-center gap-2 mb-4">
+          <FolderOpen className="w-5 h-5 text-blue-400" />
+          <h3 className="text-lg font-semibold text-white">Repository Highlights</h3>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {projectHighlights.map((project, index) => (
             <div
               key={index}
-              className="relative group"
+              className="relative group flex flex-col"
+              style={{ height: '100%' }}
             >
               {/* Glow effect on hover */}
               <div className="absolute -inset-1 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm" />
               
-              <div className="relative bg-gray-800/50 backdrop-blur-sm rounded-lg p-4 border border-gray-700/50 hover:border-gray-600/50 transition-all duration-300">
+              <div className="relative bg-gray-800/50 backdrop-blur-sm rounded-lg p-4 border border-gray-700/50 hover:border-gray-600/50 transition-all duration-300 flex flex-col h-full">
+                {/* Elegant Rank Badge */}
+                <div className="absolute -top-2 -left-2 px-2 py-1 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-lg border border-blue-400/30">
+                  #{index + 1}
+                </div>
                 {/* Project Header */}
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1 min-w-0">
@@ -60,34 +68,53 @@ const RepoHighlights = ({ repositories, limit = 3 }) => {
                         {project.name}
                       </h4>
                     </div>
-                    <p className="text-gray-400 text-xs">
+                    <p className="text-gray-400 text-xs overflow-hidden text-overflow-ellipsis" 
+                       style={{ 
+                         display: '-webkit-box',
+                         WebkitLineClamp: 3,
+                         WebkitBoxOrient: 'vertical',
+                         flexGrow: 1
+                       }}>
                       {project.description}
                     </p>
                   </div>
+                  {/* View on GitHub Link */}
+                  <a
+                    href={`https://github.com/${username || 'MaheenGitHub'}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="ml-2 p-1.5 text-gray-400 hover:text-white hover:bg-gray-700/50 rounded-lg transition-all duration-200 flex-shrink-0"
+                    title="View on GitHub"
+                  >
+                    <Github className="w-4 h-4" />
+                  </a>
                 </div>
 
-                {/* Project Stats */}
-                <div className="flex items-center gap-3 text-xs mb-3">
-                  <div className="flex items-center gap-1 text-yellow-400">
-                    <Star className="w-3 h-3" />
-                    <span>{project.stars}</span>
+                {/* Push content to bottom */}
+                <div className="mt-auto">
+                  {/* Project Stats */}
+                  <div className="flex items-center gap-3 text-xs mb-3">
+                    <div className="flex items-center gap-1 text-yellow-400">
+                      <Star className="w-3 h-3" />
+                      <span>{project.stars}</span>
+                    </div>
+                    <div className="flex items-center gap-1 text-blue-400">
+                      <Package className="w-3 h-3" />
+                      <span>{(project.size / 1024).toFixed(1)} KB</span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-1 text-blue-400">
-                    <Package className="w-3 h-3" />
-                    <span>{(project.size / 1024).toFixed(1)} KB</span>
-                  </div>
-                </div>
 
-                {/* Language Badge */}
-                <div>
-                  <span className="inline-block px-2 py-1 bg-gray-700/50 text-gray-300 text-xs rounded-full border border-gray-600/50">
-                    {project.language}
-                  </span>
+                  {/* Language Badge */}
+                  <div>
+                    <span className="inline-block px-2 py-1 bg-gray-700/50 text-gray-300 text-xs rounded-full border border-gray-600/50">
+                      {project.language}
+                    </span>
+                  </div>
                 </div>
 
                 {/* Rank Badge */}
-                <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-lg">
-                  {index + 1}
+                <div className="absolute -top-2 -left-2 px-2 py-1 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-lg border border-blue-400/30">
+                  #{index + 1}
                 </div>
               </div>
             </div>
@@ -126,17 +153,25 @@ const RepoHighlights = ({ repositories, limit = 3 }) => {
 
   return (
     <div className="glass-morphism rounded-xl p-6">
-      <h3 className="text-lg font-semibold text-white mb-4 text-center">Repository Highlights</h3>
+      <div className="flex items-center justify-center gap-2 mb-4">
+        <FolderOpen className="w-5 h-5 text-blue-400" />
+        <h3 className="text-lg font-semibold text-white">Repository Highlights</h3>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {topRepos.map((repo, index) => (
           <div
             key={repo.id}
-            className="relative group"
+            className="relative group flex flex-col"
+            style={{ height: '100%' }}
           >
             {/* Glow effect on hover */}
             <div className="absolute -inset-1 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm" />
             
-            <div className="relative bg-gray-800/50 backdrop-blur-sm rounded-lg p-4 border border-gray-700/50 hover:border-gray-600/50 transition-all duration-300">
+            <div className="relative bg-gray-800/50 backdrop-blur-sm rounded-lg p-4 border border-gray-700/50 hover:border-gray-600/50 transition-all duration-300 flex flex-col h-full">
+              {/* Elegant Rank Badge */}
+              <div className="absolute -top-2 -left-2 px-2 py-1 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-lg border border-blue-400/30">
+                #{index + 1}
+              </div>
               {/* Repository Header */}
               <div className="flex items-start justify-between mb-3">
                 <div className="flex-1 min-w-0">
@@ -144,7 +179,13 @@ const RepoHighlights = ({ repositories, limit = 3 }) => {
                     {repo.name}
                   </h4>
                   {repo.description && (
-                    <p className="text-gray-400 text-xs mt-1 line-clamp-2">
+                    <p className="text-gray-400 text-xs mt-1 overflow-hidden text-overflow-ellipsis" 
+                       style={{ 
+                         display: '-webkit-box',
+                         WebkitLineClamp: 3,
+                         WebkitBoxOrient: 'vertical',
+                         flexGrow: 1
+                       }}>
                       {repo.description}
                     </p>
                   )}
@@ -153,46 +194,44 @@ const RepoHighlights = ({ repositories, limit = 3 }) => {
                   href={repo.html_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="ml-2 p-1 text-gray-400 hover:text-white transition-colors"
+                  className="ml-2 p-1 text-gray-400 hover:text-white transition-colors flex-shrink-0"
                   title="View on GitHub"
                 >
                   <ExternalLink className="w-4 h-4" />
                 </a>
               </div>
 
-              {/* Repository Stats */}
-              <div className="flex items-center gap-3 text-xs">
-                <div className="flex items-center gap-1 text-yellow-400">
-                  <Star className="w-3 h-3" />
-                  <span>{repo.stargazers_count || 0}</span>
+              {/* Push content to bottom */}
+              <div className="mt-auto">
+                {/* Repository Stats */}
+                <div className="flex items-center gap-3 text-xs mb-3">
+                  <div className="flex items-center gap-1 text-yellow-400">
+                    <Star className="w-3 h-3" />
+                    <span>{repo.stargazers_count || 0}</span>
+                  </div>
+                  <div className="flex items-center gap-1 text-purple-400">
+                    <GitFork className="w-3 h-3" />
+                    <span>{repo.forks_count || 0}</span>
+                  </div>
+                  <div className="flex items-center gap-1 text-blue-400">
+                    <Package className="w-3 h-3" />
+                    <span>{formatSize(repo.size || 0)}</span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-1 text-purple-400">
-                  <GitFork className="w-3 h-3" />
-                  <span>{repo.forks_count || 0}</span>
-                </div>
-                <div className="flex items-center gap-1 text-blue-400">
-                  <Package className="w-3 h-3" />
-                  <span>{formatSize(repo.size || 0)}</span>
-                </div>
+
+                {/* Language Badge */}
+                {repo.language && (
+                  <div>
+                    <span className="inline-block px-2 py-1 bg-gray-700/50 text-gray-300 text-xs rounded-full border border-gray-600/50">
+                      {repo.language}
+                    </span>
+                  </div>
+                )}
               </div>
-
-              {/* Language Badge */}
-              {repo.language && (
-                <div className="mt-3">
-                  <span className="inline-block px-2 py-1 bg-gray-700/50 text-gray-300 text-xs rounded-full border border-gray-600/50">
-                    {repo.language}
-                  </span>
-                </div>
-              )}
-
-              {/* Rank Badge */}
-              <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-lg">
-                {index + 1}
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
       
       {/* Footer */}
       <div className="mt-4 text-center">

@@ -1,13 +1,26 @@
 import React from 'react';
-import { Briefcase, Users, Lightbulb, Rocket, ArrowRight } from 'lucide-react';
+import { Briefcase, Users, Lightbulb, Rocket, ArrowRight, Target } from 'lucide-react';
 
-const CareerMatch = ({ personality }) => {
+const CareerMatch = ({ personality, languages }) => {
+  // Add safety checks
   if (!personality || !personality.dominant_personality) {
-    return null;
+    return (
+      <div className="glass-morphism rounded-xl p-6 text-center">
+        <div className="text-gray-400">Career insights not available</div>
+      </div>
+    );
   }
 
   const dominantType = personality.dominant_personality.type;
   const score = personality.dominant_personality.score;
+  
+  // Extract top languages for skills with fallbacks
+  const topLanguages = languages && typeof languages === 'object' 
+    ? Object.keys(languages).slice(0, 3) 
+    : ['JavaScript', 'TypeScript', 'Python'];
+  
+  // Extract personality traits for skills with fallback
+  const personalityTraits = personality.dominant_personality?.traits || [];
 
   // Career paths based on dominant personality type
   const careerMatches = {
@@ -17,27 +30,21 @@ const CareerMatch = ({ personality }) => {
         description: "Lead development teams while driving project vision and community engagement",
         match: 95,
         icon: Rocket,
-        skills: ["Leadership", "Technical Strategy", "Team Building"],
-        salary: "$120K - $180K",
-        growth: "High"
+        justification: "High match due to strong networking skills and community-focused development approach"
       },
       {
         title: "Developer Relations", 
         description: "Bridge the gap between engineering and community through advocacy and education",
         match: 88,
         icon: Users,
-        skills: ["Communication", "Public Speaking", "Technical Writing"],
-        salary: "$90K - $140K",
-        growth: "Very High"
+        justification: "Strong match based on prolific project creation and community engagement patterns"
       },
       {
         title: "Solutions Architect",
         description: "Design comprehensive technical solutions that drive business and customer success",
         match: 82,
         icon: Lightbulb,
-        skills: ["System Design", "Client Communication", "Problem Solving"],
-        salary: "$130K - $190K",
-        growth: "High"
+        justification: "Good match from continuous learning trait and diverse project portfolio"
       }
     ],
     builder: [
@@ -46,27 +53,21 @@ const CareerMatch = ({ personality }) => {
         description: "Build robust, scalable systems and mentor other developers",
         match: 94,
         icon: Briefcase,
-        skills: ["System Architecture", "Code Quality", "Mentoring"],
-        salary: "$110K - $160K",
-        growth: "High"
+        justification: "Excellent match due to consistent project creation and technical dedication"
       },
       {
         title: "Engineering Manager",
         description: "Lead engineering teams and drive technical excellence",
         match: 87,
         icon: Users,
-        skills: ["Team Management", "Technical Leadership", "Process Improvement"],
-        salary: "$130K - $180K",
-        growth: "High"
+        justification: "Strong match from dedicated developer trait and project consistency"
       },
       {
         title: "Principal Engineer",
         description: "Solve complex technical challenges and set technical direction",
         match: 91,
         icon: Rocket,
-        skills: ["Technical Strategy", "Problem Solving", "Innovation"],
-        salary: "$150K - $220K",
-        growth: "Very High"
+        justification: "High match based on technical depth and problem-solving abilities"
       }
     ],
     explorer: [
@@ -75,27 +76,21 @@ const CareerMatch = ({ personality }) => {
         description: "Explore and master diverse technologies across the entire stack",
         match: 92,
         icon: Lightbulb,
-        skills: ["Multi-language", "System Integration", "Rapid Learning"],
-        salary: "$100K - $150K",
-        growth: "High"
+        justification: "Perfect match from diverse language stack and exploratory development style"
       },
       {
         title: "Technical Consultant",
         description: "Solve diverse problems across different industries and technologies",
         match: 85,
         icon: Briefcase,
-        skills: ["Problem Solving", "Client Management", "Technical Breadth"],
-        salary: "$120K - $170K",
-        growth: "High"
+        justification: "Strong match due to technical diversity and continuous learning approach"
       },
       {
         title: "Startup CTO",
         description: "Drive technical vision and build products from the ground up",
         match: 89,
         icon: Rocket,
-        skills: ["Product Strategy", "Team Building", "Technical Leadership"],
-        salary: "$140K - $200K+",
-        growth: "Very High"
+        justification: "Good match from exploratory mindset and rapid project iteration"
       }
     ],
     debugger: [
@@ -104,27 +99,21 @@ const CareerMatch = ({ personality }) => {
         description: "Ensure system reliability and solve complex operational issues",
         match: 93,
         icon: Lightbulb,
-        skills: ["System Monitoring", "Problem Solving", "Automation"],
-        salary: "$110K - $160K",
-        growth: "Very High"
+        justification: "High match due to problem-solving focus and systematic approach"
       },
       {
         title: "Security Engineer",
         description: "Identify and fix security vulnerabilities in complex systems",
         match: 88,
         icon: Briefcase,
-        skills: ["Security Analysis", "Risk Assessment", "Incident Response"],
-        salary: "$120K - $180K",
-        growth: "Very High"
+        justification: "Strong match from analytical mindset and attention to detail"
       },
       {
         title: "Performance Engineer",
         description: "Optimize system performance and solve scalability challenges",
         match: 85,
         icon: Rocket,
-        skills: ["Performance Tuning", "System Analysis", "Optimization"],
-        salary: "$115K - $165K",
-        growth: "High"
+        justification: "Good match based on systematic debugging and optimization skills"
       }
     ],
     perfectionist: [
@@ -133,48 +122,74 @@ const CareerMatch = ({ personality }) => {
         description: "Ensure highest code quality and comprehensive testing strategies",
         match: 94,
         icon: Briefcase,
-        skills: ["Testing Strategy", "Quality Standards", "Process Improvement"],
-        salary: "$90K - $130K",
-        growth: "High"
+        justification: "Excellent match due to attention to detail and quality-focused approach"
       },
       {
         title: "DevOps Engineer",
         description: "Build and maintain robust, automated development pipelines",
         match: 89,
         icon: Rocket,
-        skills: ["Automation", "System Design", "Process Optimization"],
-        salary: "$110K - $160K",
-        growth: "Very High"
+        justification: "Strong match from systematic approach and process optimization skills"
       },
       {
         title: "Platform Engineer",
         description: "Create and maintain reliable, scalable development platforms",
         match: 87,
         icon: Lightbulb,
-        skills: ["Platform Architecture", "System Design", "Reliability"],
-        salary: "$120K - $170K",
-        growth: "Very High"
+        justification: "Good match based on quality focus and systematic development patterns"
       }
     ]
   };
 
   const careers = careerMatches[dominantType] || careerMatches.hustler;
 
+  // Generate dynamic skills based on user data
+  const generateSkills = (careerTitle) => {
+    try {
+      const baseSkills = {
+        "Technical Lead": ["Leadership", topLanguages[0] || "JavaScript", "System Design"],
+        "Developer Relations": ["Communication", topLanguages[1] || "TypeScript", "Community Building"],
+        "Solutions Architect": ["Architecture", topLanguages[2] || "Python", "Problem Solving"],
+        "Senior Software Engineer": [topLanguages[0] || "JavaScript", "Code Quality", "Mentoring"],
+        "Engineering Manager": ["Team Leadership", topLanguages[1] || "TypeScript", "Process Improvement"],
+        "Principal Engineer": [topLanguages[2] || "Python", "Technical Strategy", "Innovation"],
+        "Full Stack Developer": [topLanguages[0] || "JavaScript", topLanguages[1] || "TypeScript", "System Integration"],
+        "Technical Consultant": ["Problem Solving", topLanguages[2] || "Python", "Client Management"],
+        "Startup CTO": ["Product Strategy", topLanguages[0] || "JavaScript", "Team Building"],
+        "Site Reliability Engineer": ["System Monitoring", topLanguages[1] || "TypeScript", "Automation"],
+        "Security Engineer": ["Security Analysis", topLanguages[2] || "Python", "Risk Assessment"],
+        "Performance Engineer": ["Performance Tuning", topLanguages[0] || "JavaScript", "Optimization"],
+        "Quality Assurance Lead": ["Testing Strategy", topLanguages[1] || "TypeScript", "Quality Standards"],
+        "DevOps Engineer": ["Automation", topLanguages[2] || "Python", "Process Optimization"],
+        "Platform Engineer": ["Platform Architecture", topLanguages[0] || "JavaScript", "Reliability"]
+      };
+      
+      return baseSkills[careerTitle] || [topLanguages[0] || "JavaScript", "Problem Solving", "Innovation"];
+    } catch (error) {
+      console.error('Error generating skills:', error);
+      return ["Problem Solving", "Innovation", "Technical Skills"];
+    }
+  };
+
   return (
     <div className="glass-morphism rounded-xl p-6">
-      <h3 className="text-lg font-semibold text-white mb-4 text-center">Career Matches</h3>
+      <div className="flex items-center justify-center gap-2 mb-4">
+        <Briefcase className="w-5 h-5 text-purple-400" />
+        <h3 className="text-lg font-semibold text-white">Career Matches</h3>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {careers.map((career, index) => {
           const Icon = career.icon;
           return (
             <div
               key={index}
-              className="relative group"
+              className="relative group flex flex-col"
+              style={{ height: '100%' }}
             >
-              {/* Glow effect on hover */}
-              <div className="absolute -inset-1 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm" />
+              {/* Glow effect on hover with purple accent */}
+              <div className="absolute -inset-1 bg-gradient-to-r from-purple-500/20 to-teal-500/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm" />
               
-              <div className="relative bg-gray-800/50 backdrop-blur-sm rounded-lg p-4 border border-gray-700/50 hover:border-gray-600/50 transition-all duration-300">
+              <div className="relative bg-gray-800/50 backdrop-blur-sm rounded-lg p-4 border border-purple-700/50 hover:border-purple-600/50 transition-all duration-300 flex flex-col h-full">
                 {/* Career Header */}
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1 min-w-0">
@@ -190,25 +205,32 @@ const CareerMatch = ({ personality }) => {
                   </div>
                 </div>
 
-                {/* Match Score */}
-                <div className="mb-3">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs text-gray-400">Match Score</span>
-                    <span className="text-xs font-semibold text-green-400">{career.match}%</span>
-                  </div>
-                  <div className="w-full bg-gray-700 rounded-full h-2">
-                    <div 
-                      className="bg-gradient-to-r from-green-500 to-blue-500 h-2 rounded-full transition-all duration-500"
-                      style={{ width: `${career.match}%` }}
-                    />
+                {/* Match Score - Vertically Centered */}
+                <div className="mb-3 flex items-center justify-center">
+                  <div className="w-full">
+                    <div className="flex items-center justify-center gap-2 mb-1">
+                      <span className="text-xs text-gray-400">Match Score</span>
+                      <span className="text-xs font-semibold text-blue-400 font-mono min-w-[3rem] text-center">
+                        {career.match}%
+                      </span>
+                    </div>
+                    <div className="w-full bg-gray-900 rounded-full h-2">
+                      <div 
+                        className="h-2 rounded-full transition-all duration-500"
+                        style={{ 
+                          width: `${career.match}%`,
+                          background: 'linear-gradient(90deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%)'
+                        }}
+                      />
+                    </div>
                   </div>
                 </div>
 
-                {/* Skills */}
-                <div className="mb-3">
-                  <div className="text-xs text-gray-400 mb-1">Key Skills</div>
-                  <div className="flex flex-wrap gap-1">
-                    {career.skills.slice(0, 2).map((skill, skillIndex) => (
+                {/* Skills Section - Flex Grow to Push Content Down */}
+                <div className="mb-3 flex-grow">
+                  <div className="text-xs text-gray-400 mb-2 text-center">Key Skills</div>
+                  <div className="flex flex-wrap justify-center gap-1">
+                    {generateSkills(career.title).map((skill, skillIndex) => (
                       <span
                         key={skillIndex}
                         className="px-2 py-1 bg-gray-700/50 text-gray-300 text-xs rounded-full border border-gray-600/50"
@@ -216,29 +238,14 @@ const CareerMatch = ({ personality }) => {
                         {skill}
                       </span>
                     ))}
-                    {career.skills.length > 2 && (
-                      <span className="px-2 py-1 bg-gray-700/50 text-gray-400 text-xs rounded-full border border-gray-600/50">
-                        +{career.skills.length - 2}
-                      </span>
-                    )}
                   </div>
                 </div>
 
-                {/* Stats */}
-                <div className="flex items-center justify-between text-xs">
-                  <div>
-                    <span className="text-gray-400">Salary: </span>
-                    <span className="text-green-400 font-medium">{career.salary}</span>
+                {/* Match Justification - Pushed to Bottom */}
+                <div className="mt-auto text-center">
+                  <div className="text-xs text-blue-400 italic">
+                    {career.justification}
                   </div>
-                  <div>
-                    <span className="text-gray-400">Growth: </span>
-                    <span className="text-blue-400 font-medium">{career.growth}</span>
-                  </div>
-                </div>
-
-                {/* Rank Badge */}
-                <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-green-500 to-blue-500 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-lg">
-                  {index + 1}
                 </div>
               </div>
             </div>
@@ -249,7 +256,7 @@ const CareerMatch = ({ personality }) => {
       {/* Footer */}
       <div className="mt-4 text-center">
         <div className="text-sm text-gray-400">
-          Based on your <span className="text-blue-400 font-medium">{personality.dominant_personality.name}</span> personality ({score}/100)
+          Based on your <span className="text-purple-400 font-medium">{personality.dominant_personality.name}</span> personality ({score}/100)
         </div>
       </div>
     </div>
