@@ -84,18 +84,6 @@ const ResultsPageV2 = () => {
       try {
         setLoading(true);
         console.log('🔍 MAKING API CALL FOR USERNAME:', username);
-        const result = await analyzeGitHubUser(username);
-        
-        // DEBUG: Log the actual data received
-        console.log('🔍 FRONTEND RECEIVED DATA:');
-        console.log('Full Result:', JSON.stringify(result, null, 2));
-        console.log('User Data:', result.user);
-        console.log('User Followers:', result.user?.followers);
-        console.log('Repository Stats:', result.repositories?.stats);
-        console.log('Analysis Data:', result.analysis);
-        console.log('Stats Object:', result.stats);
-        
-        setData(result);
         
         // Start with basic analysis first - it's more reliable
         let basicData;
@@ -108,6 +96,15 @@ const ResultsPageV2 = () => {
           navigate('/');
           return;
         }
+        
+        // DEBUG: Log the actual data received
+        console.log('🔍 FRONTEND RECEIVED DATA:');
+        console.log('Full Result:', JSON.stringify(basicData, null, 2));
+        console.log('User Data:', basicData.user);
+        console.log('User Followers:', basicData.user?.followers);
+        console.log('Repository Stats:', basicData.repositories?.stats);
+        console.log('Analysis Data:', basicData.analysis);
+        console.log('Stats Object:', basicData.stats);
         
         console.log('🔍 Basic data type:', typeof basicData);
         console.log('🔍 Basic data keys:', basicData ? Object.keys(basicData) : 'undefined');
@@ -126,19 +123,13 @@ const ResultsPageV2 = () => {
           throw new Error('No response received from API');
         }
         
-        // The API might be returning the data directly or nested under 'data'
-        let actualData = basicData;
-        if (basicData.data) {
-          actualData = basicData.data;
-        } else if (basicData.success && basicData.data) {
-          actualData = basicData.data;
-        } else if (basicData.user) {
-          // Data is directly in the response
-          actualData = basicData;
-        }
+        // The API returns data nested under 'data' field
+        let actualData = basicData.data || basicData;
         
         console.log('🔧 Using actualData:', actualData);
         console.log('🔧 actualData keys:', actualData ? Object.keys(actualData) : 'undefined');
+        console.log('🔧 actualData.user:', actualData?.user);
+        console.log('🔧 actualData.repositories:', actualData?.repositories);
         
         if (!actualData) {
           console.error('❌ No actualData found');
@@ -173,18 +164,18 @@ const ResultsPageV2 = () => {
           user: actualData.user,
           behavioral_insights: {
             coreInsight: {
-              message: `${actualData.personality.dominant_personality.name}: ${actualData.personality.dominant_personality.description}`,
+              message: `${actualData.personality?.dominant_personality?.name || 'Developer'}: ${actualData.personality?.dominant_personality?.description || 'Building great projects'}`,
               reason: "Based on personality analysis"
             },
-            truthBombs: actualData.personality.insights.strengths.slice(0, 4).map(strength => ({
+            truthBombs: actualData.personality?.insights?.strengths?.slice(0, 4).map(strength => ({
               message: strength,
               reason: "Derived from personality strengths"
-            })),
-            strengths: actualData.personality.insights.strengths,
-            blindSpots: actualData.personality.insights.improvement_areas || ['Keep learning and growing'],
-            growthSuggestions: actualData.personality.insights.recommendations,
+            })) || [],
+            strengths: actualData.personality?.insights?.strengths || ['Keep learning and growing'],
+            blindSpots: actualData.personality?.insights?.improvement_areas || ['Keep learning and growing'],
+            growthSuggestions: actualData.personality?.insights?.recommendations || ['Continue your journey'],
             identityStatement: {
-              message: `The ${actualData.personality.dominant_personality.name}`,
+              message: `The ${actualData.personality?.dominant_personality?.name || 'Developer'}`,
               reason: "Based on dominant personality type"
             },
             roasts: [{
@@ -195,14 +186,27 @@ const ResultsPageV2 = () => {
           evolution_timeline: enhancedData?.evolution_timeline || generateFallbackTimeline(actualData)
         };
         
-        const finalRoastData = roastData;
+        const finalRoastData = roastData || {
+          roasts: [{
+            message: "You're too perfect to roast!",
+            reason: "Positive vibes only"
+          }]
+        };
         
         console.log('🎯 Setting data:', { analysis: analysisData, roast: finalRoastData, stats: actualData.user });
+        
+        // Combine user data with repositories and languages for the frontend
+        const userData = {
+          ...actualData.user,
+          repositories: actualData.repositories,
+          languages: actualData.languages,
+          personality: actualData.personality
+        };
         
         setData({
           analysis: analysisData,
           roast: finalRoastData,
-          stats: actualData.user
+          stats: userData
         });
       } catch (error) {
         console.error('Analysis failed:', error);
@@ -249,8 +253,13 @@ const ResultsPageV2 = () => {
     );
   }
 
-  const { analysis, user, repositories, languages, personality } = data;
-  const stats = {
+  const { analysis, roast, stats } = data;
+  const user = stats;
+  const repositories = stats.repositories || {};
+  const languages = stats.languages || {};
+  const personality = analysis?.behavioral_insights || {};
+  
+  const repoStats = {
     repo_count: repositories?.total_count || 0,
     stars: repositories?.stats?.total_stars || 0,
     forks: repositories?.stats?.total_forks || 0,
@@ -332,8 +341,8 @@ const ResultsPageV2 = () => {
             >
               <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-white/20 shadow-2xl">
                 <img 
-                  src={stats.avatar_url} 
-                  alt={stats.name} 
+                  src={user.avatar_url} 
+                  alt={user.name} 
                   className="w-full h-full object-cover" 
                 />
               </div>
@@ -350,9 +359,9 @@ const ResultsPageV2 = () => {
               transition={{ duration: 0.6, delay: 0.1 }}
             >
               <h1 className="text-4xl md:text-5xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-                {stats.name}
+                {user.name}
               </h1>
-              <p className="text-xl text-gray-300 mb-4">@{stats.username}</p>
+              <p className="text-xl text-gray-300 mb-4">@{user.username}</p>
               
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
@@ -385,25 +394,25 @@ const ResultsPageV2 = () => {
               {
                 icon: Package,
                 label: 'Project Portfolio',
-                value: stats?.repo_count || 0,
+                value: repoStats?.repo_count || 0,
                 color: 'text-blue-500'
               },
               {
                 icon: Star,
                 label: 'Community Impact',
-                value: (stats?.stars || 0).toLocaleString(),
+                value: (repoStats?.stars || 0).toLocaleString(),
                 color: 'text-yellow-500'
               },
               {
                 icon: GitFork,
                 label: 'Network Reach',
-                value: (stats?.forks || 0).toLocaleString(),
+                value: (repoStats?.forks || 0).toLocaleString(),
                 color: 'text-purple-500'
               },
               {
                 icon: Code2,
                 label: 'Tech Diversity',
-                value: Object.keys(analysis?.languages || {}).length,
+                value: repoStats?.languages_count || 0,
                 color: 'text-green-500'
               }
             ].map((stat, index) => (
@@ -459,7 +468,7 @@ const ResultsPageV2 = () => {
                   {modeKey === 'roast' && (
                     <span className="flex items-center gap-2">
                       <Flame className="w-4 h-4" />
-                      Roast 😈
+                      Roast 👀
                     </span>
                   )}
                 </button>
