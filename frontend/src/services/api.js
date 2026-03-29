@@ -3,7 +3,7 @@ import toast from 'react-hot-toast'
 
 // Create axios instance with default configuration
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api',
+  baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
   timeout: 60000, // Increased to 60 seconds for complex analysis
   headers: {
     'Content-Type': 'application/json',
@@ -12,7 +12,7 @@ const api = axios.create({
 
 // Debug: Log the actual base URL being used
 console.log('🔧 API Base URL:', import.meta.env.VITE_API_BASE_URL);
-console.log('🔧 Fallback URL:', 'http://localhost:5000/api');
+console.log('🔧 Fallback URL:', '/api');
 console.log('🔧 Final Base URL:', api.defaults.baseURL);
 
 // Request interceptor for logging
