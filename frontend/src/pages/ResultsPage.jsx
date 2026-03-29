@@ -313,49 +313,58 @@ const ResultsPage = () => {
             <span>Back to Home</span>
           </button>
           
-          {/* Share Button */}
-          <button
-            onClick={handleShare}
-            className="p-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors duration-200"
-          >
-            <Share2 className="w-4 h-4" />
-          </button>
-          
-          {/* Export Dropdown */}
-          <div className="relative">
-            <button
-              onClick={() => setShowExportDropdown(!showExportDropdown)}
-              className="flex items-center gap-2 p-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors duration-200"
+          {/* Action Buttons Container */}
+          <div className="flex items-center gap-3">
+            {/* Share Button */}
+            <motion.button
+              onClick={handleShare}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg border-2 border-emerald-600 transition-all duration-200"
             >
-              <Download className="w-4 h-4" />
-              <ChevronDown className="w-3 h-3" />
-            </button>
+              <Share2 className="w-4 h-4" />
+              <span className="text-sm font-medium">Share Profile</span>
+            </motion.button>
             
-            {showExportDropdown && (
-              <div className="absolute right-0 top-full mt-2 w-48 bg-gray-800 rounded-lg shadow-lg border border-gray-700 z-50">
-                <button
-                  onClick={handleDownload}
-                  className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-700 transition-colors"
-                >
-                  <FileText className="w-4 h-4 text-blue-400" />
-                  <span className="text-white">Download JSON</span>
-                </button>
-                <button
-                  onClick={handlePDFExport}
-                  className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-700 transition-colors"
-                >
-                  <FileText className="w-4 h-4 text-red-400" />
-                  <span className="text-white">Download PDF</span>
-                </button>
-                <button
-                  onClick={handleImageExport}
-                  className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-700 transition-colors"
-                >
-                  <Image className="w-4 h-4 text-green-400" />
-                  <span className="text-white">Save as Image</span>
-                </button>
-              </div>
-            )}
+            {/* Export Dropdown */}
+            <div className="relative">
+              <motion.button
+                onClick={() => setShowExportDropdown(!showExportDropdown)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg border-2 border-indigo-600 transition-all duration-200"
+              >
+                <Download className="w-4 h-4" />
+                <span className="text-sm font-medium">Download</span>
+                <ChevronDown className="w-3 h-3" />
+              </motion.button>
+              
+              {showExportDropdown && (
+                <div className="absolute right-0 top-full mt-2 w-48 bg-gray-800 rounded-lg shadow-lg border border-gray-700 z-50">
+                  <button
+                    onClick={handleDownload}
+                    className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-700 transition-colors"
+                  >
+                    <FileText className="w-4 h-4 text-blue-400" />
+                    <span className="text-white">Download JSON</span>
+                  </button>
+                  <button
+                    onClick={handlePDFExport}
+                    className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-700 transition-colors"
+                  >
+                    <FileText className="w-4 h-4 text-red-400" />
+                    <span className="text-white">Download PDF</span>
+                  </button>
+                  <button
+                    onClick={handleImageExport}
+                    className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-700 transition-colors"
+                  >
+                    <Image className="w-4 h-4 text-green-400" />
+                    <span className="text-white">Save as Image</span>
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </motion.div>
         
