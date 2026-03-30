@@ -17,10 +17,10 @@ class GitHubService {
       timeout: 30000, // 30 seconds timeout
       headers: {
         'Accept': 'application/vnd.github.v3+json',
-        'User-Agent': 'Dev-DNA-Analyzer/1.0.0',
+        'User-Agent': 'GitXray-App',
         // Add GitHub token if available (for higher rate limits)
-        ...(process.env.GITHUB_API_TOKEN && {
-          'Authorization': `token ${process.env.GITHUB_API_TOKEN}`
+        ...(process.env.GITHUB_TOKEN && {
+          'Authorization': `token ${process.env.GITHUB_TOKEN}`
         })
       }
     });
@@ -167,11 +167,13 @@ class GitHubService {
     try {
       logger.info(`🔍 REAL API CALL for GitHub user: ${username}`);
 
-      // Fetch user profile and repositories in parallel
-      const [userProfile, repositories] = await Promise.all([
-        this.getUserProfile(username),
-        this.getUserRepositories(username)
-      ]);
+      // Fetch user profile first, then repositories with delay to avoid rate limits
+      const userProfile = await this.getUserProfile(username);
+      
+      // Add 300ms delay before fetching repositories to avoid secondary rate limits
+      await new Promise(resolve => setTimeout(resolve, 300));
+      
+      const repositories = await this.getUserRepositories(username);
 
       // DEBUG: Log the ACTUAL GitHub API response
       console.log('🔍 REAL GITHUB DATA:');
@@ -341,6 +343,9 @@ class GitHubService {
           throw new Error(`GitHub user '${username}' not found`);
         case 403:
           if (message.includes('rate limit')) {
+            if (message.includes('secondary rate limit') || message.includes('abuse detection')) {
+              throw new Error('GitHub API secondary rate limit exceeded. Please wait a few minutes before trying again.');
+            }
             throw new Error('GitHub API rate limit exceeded. Please try again later.');
           }
           throw new Error(`Access forbidden to ${resource} for user '${username}'`);
