@@ -14,13 +14,9 @@
     }
   ],
   "rewrites": [
-    { 
-      "source": "/api/(.*)", 
-      "destination": "/api/$1" 
-    },
-    { 
-      "source": "/(.*)", 
-      "destination": "/frontend/index.html" 
-    }
+    { "source": "/api/(.*)", "destination": "/backend/server.js" },
+    { "source": "/results/(.*)", "destination": "/frontend/index.html" },
+    { "source": "/results-v2/(.*)", "destination": "/frontend/index.html" },
+    { "source": "/", "destination": "/frontend/index.html" }
   ]
 }
