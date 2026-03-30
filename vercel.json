@@ -14,7 +14,20 @@
     }
   ],
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/backend/server.js" },
-    { "source": "/(.*)", "destination": "/frontend/$1" }
+    { 
+      "source": "/api/(.*)", 
+      "destination": "/backend/server.js" 
+    },
+    { 
+      "source": "/(.*)", 
+      "destination": "/frontend/index.html",
+      "has": [
+        {
+          "type": "header",
+          "key": "accept",
+          "value": "text/html"
+        }
+      ]
+    }
   ]
 }
