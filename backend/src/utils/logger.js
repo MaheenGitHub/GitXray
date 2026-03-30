@@ -43,35 +43,44 @@ const format = winston.format.combine(
   ),
 );
 
-// Define transports
+// Define transports based on environment
+const isProduction = process.env.NODE_ENV === 'production';
+
 const transports = [
-  // Console transport
+  // Console transport (always included)
   new winston.transports.Console({
     format: winston.format.combine(
       winston.format.colorize(),
       winston.format.simple()
     )
   }),
-  
+];
+
+// Only add file transports in non-production environments
+if (!isProduction) {
   // File transport for errors
-  new winston.transports.File({
-    filename: path.join(__dirname, '../../logs/error.log'),
-    level: 'error',
-    format: winston.format.combine(
-      winston.format.timestamp(),
-      winston.format.json()
-    )
-  }),
+  transports.push(
+    new winston.transports.File({
+      filename: path.join(__dirname, '../../logs/error.log'),
+      level: 'error',
+      format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.json()
+      )
+    })
+  );
   
   // File transport for all logs
-  new winston.transports.File({
-    filename: path.join(__dirname, '../../logs/combined.log'),
-    format: winston.format.combine(
-      winston.format.timestamp(),
-      winston.format.json()
-    )
-  }),
-];
+  transports.push(
+    new winston.transports.File({
+      filename: path.join(__dirname, '../../logs/combined.log'),
+      format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.json()
+      )
+    })
+  );
+}
 
 // Create the logger
 const logger = winston.createLogger({
@@ -82,16 +91,18 @@ const logger = winston.createLogger({
   exitOnError: false,
 });
 
-// Create logs directory if it doesn't exist
-const fs = require('fs');
-const logsDir = path.join(__dirname, '../../logs');
-try {
-  if (!fs.existsSync(logsDir)) {
-    fs.mkdirSync(logsDir, { recursive: true });
+// Create logs directory if it doesn't exist (only in non-production)
+if (!isProduction) {
+  const fs = require('fs');
+  const logsDir = path.join(__dirname, '../../logs');
+  try {
+    if (!fs.existsSync(logsDir)) {
+      fs.mkdirSync(logsDir, { recursive: true });
+    }
+  } catch (error) {
+    console.warn('Warning: Could not create logs directory:', error.message);
+    // Continue without file logging if directory creation fails
   }
-} catch (error) {
-  console.warn('Warning: Could not create logs directory:', error.message);
-  // Continue without file logging if directory creation fails
 }
 
 module.exports = logger;
