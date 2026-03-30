@@ -1,22 +1,7 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "frontend/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
-    },
-    {
-      "src": "backend/server.js",
-      "use": "@vercel/node"
-    }
-  ],
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/backend/server.js" },
-    { "source": "/results/(.*)", "destination": "/frontend/index.html" },
-    { "source": "/results-v2/(.*)", "destination": "/frontend/index.html" },
-    { "source": "/", "destination": "/frontend/index.html" }
+    { "source": "/((?!api|assets|static|favicon.ico).* )", "destination": "/frontend/index.html" }
   ]
 }
