@@ -16,18 +16,11 @@
   "rewrites": [
     { 
       "source": "/api/(.*)", 
-      "destination": "/backend/server.js" 
+      "destination": "/api/$1" 
     },
     { 
       "source": "/(.*)", 
-      "destination": "/frontend/index.html",
-      "has": [
-        {
-          "type": "header",
-          "key": "accept",
-          "value": "text/html"
-        }
-      ]
+      "destination": "/frontend/index.html" 
     }
   ]
 }
