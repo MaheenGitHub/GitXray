@@ -1,7 +1,4 @@
 # 🧬 GitXray — Developer Intelligence Engine
-
-> Advanced GitHub profile analysis that reveals your unique Developer DNA through data-driven personality insights.
-
 ![License](https://img.shields.io/github/license/MaheenGitHub/GitXray?style=flat-square)
 ![React Version](https://img.shields.io/badge/React-18.2.0-61dafb?style=flat-square)
 ![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen?style=flat-square)
