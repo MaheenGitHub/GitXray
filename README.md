@@ -20,6 +20,9 @@ It's a **Developer Behavior Intelligence System** that:
 - Reveals strengths, blind spots & habits  
 - Even roasts you (accurately)
 
+![GitXray Homepage Screenshot](GitXray_HomePage_ss.png)
+
+
 ---
 
 ## Why GitXray is Different
